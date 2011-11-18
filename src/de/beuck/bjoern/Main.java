@@ -2,6 +2,7 @@ package de.beuck.bjoern;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.JFrame;
@@ -9,6 +10,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
+
+import de.beuck.bjoern.GUI.TrackInfo;
 
 public class Main {
 
@@ -35,6 +38,8 @@ public class Main {
 	 */
 	public Main() {
 		initialize();
+		
+
 	}
 
 	/**

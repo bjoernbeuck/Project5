@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.beuck.bjoern.GUI;
 
 import javax.swing.JPanel;
 import java.awt.GridLayout;

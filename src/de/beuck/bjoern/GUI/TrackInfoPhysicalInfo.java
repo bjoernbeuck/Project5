@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.beuck.bjoern.GUI;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -11,6 +11,9 @@ import javax.swing.JSeparator;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
+
+import de.beuck.bjoern.lang.LanguageExecption;
+import de.beuck.bjoern.lang.LocationManager;
 
 public class TrackInfoPhysicalInfo extends JPanel {
 	private JTextField textField;

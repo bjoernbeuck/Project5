@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.beuck.bjoern.GUI;
 
 import javax.swing.JPanel;
 import java.awt.GridLayout;
@@ -8,6 +8,10 @@ import javax.swing.JCheckBox;
 import javax.swing.BoxLayout;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
+
+import de.beuck.bjoern.lang.LanguageExecption;
+import de.beuck.bjoern.lang.LocationManager;
+
 import java.awt.FlowLayout;
 import java.util.Locale;
 import java.util.ResourceBundle;

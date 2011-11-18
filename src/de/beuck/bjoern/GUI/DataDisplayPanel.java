@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.beuck.bjoern.GUI;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+
+import de.beuck.bjoern.data.BmiTrendKonstants;
 import net.java.dev.transparentlayout.*;
 
 public class DataDisplayPanel {
@@ -43,7 +45,7 @@ public class DataDisplayPanel {
 		icons = new Icon[fileNames.length];
 		int i = 0;
 		for(String file : fileNames){
-			URL res = DataDisplayPanel.class.getResource("./Rescourcen/" + file);
+			URL res = DataDisplayPanel.class.getResource("./../Resourcen/" + file);
 			icons[i] = new ImageIcon(res);
 			i++;
 		}
@@ -53,19 +55,19 @@ public class DataDisplayPanel {
 		preloadBMITrendIcons();
 	}
 	
-	public DataDisplay getDisplay(int bmiTrend, Date date, double weight, double bmi, int kcal){
+	public DataDisplay getDisplay(BmiTrendKonstants bmiTrend, Date date, double weight, double bmi, int kcal){
 		return new DataDisplay(bmiTrend, date, weight, bmi,  kcal);
 	}
 	
 	
 	public class DataDisplay extends JPanel{
-		private int bmiTrend;
+		private BmiTrendKonstants bmiTrend;
 		private Date date;
 		private double weight, bmi;
 		private int kCal;
 		private Dimension dim = new Dimension(100,70);
 		
-		public DataDisplay(int bmiTrend, Date date, double weight, double bmi, int kcal){
+		public DataDisplay(BmiTrendKonstants bmiTrend, Date date, double weight, double bmi, int kcal){
 			this.bmiTrend = bmiTrend;
 			this.date = date;
 			this.weight = weight;
@@ -77,10 +79,22 @@ public class DataDisplayPanel {
 		public void paint(Graphics g) {
 			int offset = 20;
 			int xPos = 10;
+			int iconHeight = 0;
 			
 			setLayout(new TransparentLayout());
 			JLabel lblPicture = new JLabel("Picture");
-			lblPicture.setIcon(icons[bmiTrend]);
+			if(BmiTrendKonstants.bmi_down == bmiTrend){
+				lblPicture.setIcon(icons[1]);
+				iconHeight = icons[1].getIconHeight();
+			}
+			else if(BmiTrendKonstants.bmi_equal == bmiTrend){
+				lblPicture.setIcon(icons[2]);
+				iconHeight = icons[2].getIconHeight();
+			}
+			else if(BmiTrendKonstants.bmi_up == bmiTrend){
+				lblPicture.setIcon(icons[0]);
+				iconHeight = icons[0].getIconHeight();
+			}
 			xPos = lblPicture.getPreferredSize().width + offset;
 			add(lblPicture, new Point(10, 5));
 			
@@ -102,7 +116,7 @@ public class DataDisplayPanel {
 			add(lblBmi, new Point(xPos, 10));
 			xPos += lblBmi.getPreferredSize().width + offset; 
 			
-			this.dim = new Dimension(xPos, icons[bmiTrend].getIconHeight() + 10);
+			this.dim = new Dimension(xPos, iconHeight + 10);
 			super.paint(g);
 		}
 
@@ -125,7 +139,7 @@ public class DataDisplayPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		DataDisplayPanel frm = DataDisplayPanel.getInstace(2000);
 		
-		frame.getContentPane().add(frm.getDisplay(DataDisplayPanel.BMI_UP, new Date(), 82.5, 22.89, 500));
+		frame.getContentPane().add(frm.getDisplay(BmiTrendKonstants.bmi_up, new Date(), 82.5, 22.89, 500));
 		frame.pack();
 		frame.setVisible(true);
 	}

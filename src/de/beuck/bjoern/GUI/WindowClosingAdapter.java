@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.beuck.bjoern.GUI;
 
 
 import java.awt.event.WindowAdapter;

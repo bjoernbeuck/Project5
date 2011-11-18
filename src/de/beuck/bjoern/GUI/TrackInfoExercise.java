@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.beuck.bjoern.GUI;
 
 import javax.swing.JPanel;
 import java.awt.GridLayout;
@@ -11,6 +11,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
+
+import de.beuck.bjoern.lang.LanguageExecption;
+import de.beuck.bjoern.lang.LocationManager;
 
 public class TrackInfoExercise extends JPanel {
 	private JTextField textField;

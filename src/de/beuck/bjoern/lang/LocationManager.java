@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.beuck.bjoern.lang;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +8,7 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Vector;
+
 
 
 /**

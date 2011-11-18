@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.beuck.bjoern.lang;
 
 import java.util.Locale;
 

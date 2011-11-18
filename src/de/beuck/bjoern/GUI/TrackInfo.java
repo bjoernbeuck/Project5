@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.beuck.bjoern.GUI;
 
 import java.awt.BorderLayout;
 import java.util.Locale;
@@ -6,6 +6,8 @@ import java.util.Locale;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+
+import de.beuck.bjoern.lang.LanguageExecption;
 
 public class TrackInfo extends JPanel {
 
