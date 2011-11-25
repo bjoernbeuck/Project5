@@ -175,4 +175,14 @@ public class DataProvider {
 		}
 		return null;
 	}
+	
+	@Override
+	public String toString(){
+		StringBuffer str = new StringBuffer();
+		for(DailyHistory his : _dailyHistory){
+			str.append(his);
+			str.append(" ");
+		}
+		return str.toString();
+	}
 }

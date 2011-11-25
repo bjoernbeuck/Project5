@@ -7,6 +7,10 @@ public class WeightHistory {
 	private long _timestamp;
 	private long _id;
 	
+	@Override
+	public String toString(){
+		return _weight + " " +  _timestamp;
+	}
 	
 	public WeightHistory(double weight){
 		_weight = weight;

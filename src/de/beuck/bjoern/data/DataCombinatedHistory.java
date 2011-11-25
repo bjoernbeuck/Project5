@@ -33,6 +33,11 @@ public class DataCombinatedHistory {
 	public int get_Kcal() {
 		return _kcal;
 	}
+
+	@Override
+	public String toString() {
+		return "Date: " + _date + " Weight: " + _weight + " BMI: " + _bmi + " Kcal: " + _kcal;
+	}
 	
 	
 	

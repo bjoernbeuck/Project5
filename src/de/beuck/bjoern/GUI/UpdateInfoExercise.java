@@ -9,7 +9,11 @@ import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.swing.JFormattedTextField;
 import javax.swing.JButton;
+
+import de.beuck.bjoern.lang.LanguageExecption;
+
 import java.awt.FlowLayout;
+import java.util.Locale;
 
 public class UpdateInfoExercise extends JPanel {
 	private JTextField textField;
@@ -17,7 +21,7 @@ public class UpdateInfoExercise extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public UpdateInfoExercise() {
+	public UpdateInfoExercise(Locale language) throws LanguageExecption{
 		setLayout(new GridLayout(5, 0, 0, 0));
 		
 		JPanel panel = new JPanel();

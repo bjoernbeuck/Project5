@@ -16,6 +16,10 @@ public class IntakenHistory {
 	private double _quantity;
 	private Vector<NutrialInformation> _nutrial = new Vector<NutrialInformation>();
 	
+	@Override
+	public String toString(){
+		return "Intaken: Quanti" + _quantity + " " + _timestamp;
+	}
 	
 	public IntakenHistory(double quanity, NutrialInformation nutrial){
 		_quantity = quanity;

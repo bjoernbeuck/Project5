@@ -12,6 +12,27 @@ public class DailyHistory {
 	private int _kCalBuf = 0;
 	private boolean isLastestCalories = false;
 	
+	@Override
+	public String toString(){
+		StringBuffer str = new StringBuffer();
+		str.append("Date: ");
+		str.append(_date.toString());
+		for(WeightHistory his: _weights){
+			str.append(his);
+			str.append("\n ");
+		}
+		for(IntakenHistory his: _intaken){
+			str.append(his);
+			str.append("\n ");
+		}
+		
+		return str.toString();
+		
+		
+		
+		
+	}
+	
 	public Date get_date() {
 		return _date;
 	}

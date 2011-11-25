@@ -2,17 +2,21 @@ package de.beuck.bjoern.GUI;
 
 import javax.swing.JPanel;
 import java.awt.GridLayout;
+import java.util.Locale;
+
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JSpinner;
 
-public class UpdateInfoDiet extends JPanel {
+import de.beuck.bjoern.lang.LanguageExecption;
+
+public class UpdateInfoDiet extends JPanel{
 
 	/**
 	 * Create the panel.
 	 */
-	public UpdateInfoDiet() {
+	public UpdateInfoDiet(Locale language)  throws LanguageExecption{
 		setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JPanel panel = new JPanel();

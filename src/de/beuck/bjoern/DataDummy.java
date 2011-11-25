@@ -24,5 +24,7 @@ public class DataDummy {
 			provider.setNewWeight(new WeightHistory(initWeight), new Date(initDate + (oneday * i)));
 			provider.setNewIntaken(new IntakenHistory(rand.nextDouble() % 5, new NutrialInformation(rand.nextInt()%2600, rand.nextDouble() % 1000)), new Date(initDate + (oneday * i)));
 		}
+
 	}
+	
 }

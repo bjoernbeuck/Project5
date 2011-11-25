@@ -7,6 +7,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
+import java.util.Locale;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
@@ -17,7 +19,7 @@ public class UpdateInfoGoal extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public UpdateInfoGoal() {
+	public UpdateInfoGoal(Locale language) {
 		setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JLabel lblError = new JLabel("Error");
