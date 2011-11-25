@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,6 +22,8 @@ import de.beuck.bjoern.GUI.DataDisplayContainer;
 import de.beuck.bjoern.GUI.SelectPanel;
 import de.beuck.bjoern.GUI.TrackInfo;
 import de.beuck.bjoern.GUI.bmiPanel;
+import de.beuck.bjoern.data.DataCombinatedHistory;
+import de.beuck.bjoern.data.DataProvider;
 import de.beuck.bjoern.lang.LanguageExecption;
 import de.beuck.bjoern.lang.LocationManager;
 
@@ -140,6 +143,14 @@ public class Main {
 		Container container = frmStart.getContentPane();
 		GridBagLayout gbl = new GridBagLayout();
 		container.setLayout(gbl);
+		Vector<DataCombinatedHistory> datas = new Vector<DataCombinatedHistory>();
+		
+		DataDummy.createDatas();
+		DataProvider provider = DataProvider.getInstance();
+		datas = provider.getData();
+		
+		//DataDisplayContainer dis = new DataDisplayContainer();
+
 		//														 x, y, w, h, wx, wy
 		//addComponent(container, gbl, new JButton(), 	     1, 0, 3, 1, 1.0, 1.0);
 		//addComponent(container, gbl, new bmiPanel(20.5), 	     1, 0, 3, 1, 1.0, 1.0);
