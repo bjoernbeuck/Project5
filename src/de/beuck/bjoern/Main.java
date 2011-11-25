@@ -143,11 +143,12 @@ public class Main {
 		//														 x, y, w, h, wx, wy
 		//addComponent(container, gbl, new JButton(), 	     1, 0, 3, 1, 1.0, 1.0);
 		//addComponent(container, gbl, new bmiPanel(20.5), 	     1, 0, 3, 1, 1.0, 1.0);
-		addComponent(container, gbl, new SelectPanel(),  		 0, 1, 1, 4, 1.0, 1.0);
-		addComponent(container, gbl, new DataDisplayContainer(), 1, 1, 4, 4, 1.0, 1.0);
+		//addComponent(container, gbl, new SelectPanel(),  		 0, 1, 1, 4, 1.0, 1.0);
+		addComponent(container, gbl, new DataDisplayContainer(), 0,1,1,4,1.0,1.0);//1, 1, 4, 4, 1.0, 1.0);
 		//addComponent(frmStart, gbl, , 0, 0, 2, 1, 1.0, 1.0);
 		
-		
+		frmStart.pack();
+		frmStart.validate();
 
 	}
 	
