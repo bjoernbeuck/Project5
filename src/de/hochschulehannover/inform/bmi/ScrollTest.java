@@ -1,4 +1,4 @@
-package de.beuck.bjoern;
+package de.hochschulehannover.inform.bmi;
 
 import javax.swing.JPanel;
 

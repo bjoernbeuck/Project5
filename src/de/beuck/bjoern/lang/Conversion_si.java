@@ -2,11 +2,11 @@ package de.beuck.bjoern.lang;
 
 import java.util.Locale;
 
-public class Location_de implements LocaleUnits{
+public class Conversion_si implements LocaleUnits{
 
 	@Override
 	public String getDisplayName() {
-		return "Deutsch metrisch";
+		return "metric";
 	}
 
 	@Override

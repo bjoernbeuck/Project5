@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.xml.crypto.Data;
 
-import de.beuck.bjoern.DataDummy;
 import de.beuck.bjoern.data.DataCombinatedHistory;
 import de.beuck.bjoern.data.DataProvider;
+import de.hochschulehannover.inform.bmi.DataDummy;
 
 public class DataDisplayContainer extends JPanel {
 

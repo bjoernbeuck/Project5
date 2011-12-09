@@ -2,6 +2,8 @@ package de.beuck.bjoern.data;
 
 import java.util.Date;
 
+
+/* Per day */
 public class WeightHistory {
 	private double _weight;
 	private long _timestamp;

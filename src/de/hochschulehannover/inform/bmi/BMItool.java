@@ -1,6 +1,7 @@
-package de.beuck.bjoern;
+package de.hochschulehannover.inform.bmi;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
@@ -15,10 +16,16 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import org.apache.log4j.BasicConfigurator;
 
 import de.beuck.bjoern.GUI.DataDisplayContainer;
+import de.beuck.bjoern.GUI.DataDisplayPanel;
 import de.beuck.bjoern.GUI.SelectPanel;
 import de.beuck.bjoern.GUI.TrackInfo;
 import de.beuck.bjoern.GUI.bmiPanel;
@@ -26,32 +33,57 @@ import de.beuck.bjoern.data.DataCombinatedHistory;
 import de.beuck.bjoern.data.DataProvider;
 import de.beuck.bjoern.lang.LanguageExecption;
 import de.beuck.bjoern.lang.LocationManager;
+import de.hochschulehannover.inform.bmi.gui.GUIcontrol;
 
-public class Main {
+public class BMItool {
 
 	private JFrame frmStart;
-	private Locale language = new Locale("en_EN");
+
+	static GUIcontrol _guiControl;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Main window = new Main();
-					window.frmStart.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public static void main(final String[] args) {
+		// Set up a simple log4j configuration that logs on the console.
+		
+		
+	     BasicConfigurator.configure();
+	     try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		_guiControl = GUIcontrol.getInstance();
+		
+		
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					BMItool window = new BMItool();
+//					window.frmStart.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
 	}
 
 	/**
 	 * Create the application.
 	 */
-	public Main() {
+	public BMItool() {
 		try {
 			initialize();
 		} catch (LanguageExecption e) {
@@ -68,12 +100,12 @@ public class Main {
 	 */
 	private void initialize() throws LanguageExecption {
 		frmStart = new JFrame();
-		frmStart.setTitle("Start");
+		frmStart.setTitle("BMI Tool");
 		frmStart.setBounds(100, 100, 647, 499);
 		frmStart.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		
-		//Menüleite--------------------------
+		/*
+		//Menï¿½leite--------------------------
 		JMenuBar menuBar = new JMenuBar();
 		frmStart.setJMenuBar(menuBar);
 		
@@ -142,25 +174,29 @@ public class Main {
 		
 		Container container = frmStart.getContentPane();
 		GridBagLayout gbl = new GridBagLayout();
-		container.setLayout(gbl);
+		container.setLayout(gbl);*/
 		Vector<DataCombinatedHistory> datas = new Vector<DataCombinatedHistory>();
 		
 		DataDummy.createDatas();
 		DataProvider provider = DataProvider.getInstance();
 		datas = provider.getData();
-		
+		/*
 		//DataDisplayContainer dis = new DataDisplayContainer();
 
 		//														 x, y, w, h, wx, wy
 		//addComponent(container, gbl, new JButton(), 	     1, 0, 3, 1, 1.0, 1.0);
 		//addComponent(container, gbl, new bmiPanel(20.5), 	     1, 0, 3, 1, 1.0, 1.0);
-		//addComponent(container, gbl, new SelectPanel(),  		 0, 1, 1, 4, 1.0, 1.0);
-		addComponent(container, gbl, new DataDisplayContainer(), 0,1,1,4,1.0,1.0);//1, 1, 4, 4, 1.0, 1.0);
+		addComponent(container, gbl, new SelectPanel(),  		 0, 1, 1, 4, 1.0, 1.0);
+		//addComponent(container, gbl, new DataDisplayContainer(), 0,1,1,4,1.0,1.0);//1, 1, 4, 4, 1.0, 1.0);
 		//addComponent(frmStart, gbl, , 0, 0, 2, 1, 1.0, 1.0);
 		
 		frmStart.pack();
-		frmStart.validate();
-
+		frmStart.validate();*/
+		
+		//frmStart.add(new bmiPanel(20.5));
+		//frmStart.pack();
+		//frmStart.validate();
+		frmStart.add(new DataDisplayContainer());
 	}
 	
 	static void addComponent(Container cont, GridBagLayout gbl, Component c, int x, int y, int width, int height, double weightx, double weighty){

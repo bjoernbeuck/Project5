@@ -3,7 +3,7 @@ package de.beuck.bjoern.lang;
 import java.util.Locale;
 
 
-public class Location_en implements LocaleUnits {
+public class Conversion_uscu implements LocaleUnits {
 
 	private static final String MODULE_NAME = "Location_en";
 

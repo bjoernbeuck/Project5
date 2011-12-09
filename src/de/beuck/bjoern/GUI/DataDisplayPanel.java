@@ -134,14 +134,14 @@ public class DataDisplayPanel {
 		
 	}
 	
-	public static void main(String[] args){
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		DataDisplayPanel frm = DataDisplayPanel.getInstace(2000);
-		
-		frame.getContentPane().add(frm.getDisplay(BmiTrendKonstants.bmi_up, new Date(), 82.5, 22.89, 500));
-		frame.pack();
-		frame.setVisible(true);
-	}
+//	public static void main(String[] args){
+//		JFrame frame = new JFrame();
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		DataDisplayPanel frm = DataDisplayPanel.getInstace(2000);
+//		
+//		frame.getContentPane().add(frm.getDisplay(BmiTrendKonstants.bmi_up, new Date(), 82.5, 22.89, 500));
+//		frame.pack();
+//		frame.setVisible(true);
+//	}
 
 }

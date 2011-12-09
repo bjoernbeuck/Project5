@@ -13,8 +13,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-public class bmiPanel extends Frame {
-
+public class bmiPanel extends JPanel { 
 	private static final long serialVersionUID = -6211019038447300250L;
 	private Image background = null;
 	private Image pointer = null;
@@ -26,8 +25,8 @@ public class bmiPanel extends Frame {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		bmiPanel frame = new bmiPanel(25.7);
-		frame.addWindowListener(new WindowClosingAdapter(true));
-		frame.pack();
+		//frame.addWindowListener(new WindowClosingAdapter(true));
+		//frame.pack();
 		frame.setVisible(true);
 
 	}
@@ -112,7 +111,7 @@ public class bmiPanel extends Frame {
 	    
 	    //Zwischenspeicherbild
 	    BufferedImage tempRI = new BufferedImage(2*X, 2*Y, BufferedImage.TYPE_INT_ARGB);
-	    //Neues Bild in der benötigten Größe
+	    //Neues Bild in der benï¿½tigten Grï¿½ï¿½e
 	    BufferedImage RI = new BufferedImage(X, Y, BufferedImage.TYPE_INT_ARGB);
 	    
 	    AffineTransform af = AffineTransform.getRotateInstance(angle, X/2, Y/2);
