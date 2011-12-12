@@ -1,15 +1,21 @@
 package de.hochschulehannover.inform.bmi.gui;
 
+import java.awt.Component;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import org.apache.log4j.Logger;
 
 import de.hochschulehannover.inform.bmi.DataDummy;
 import de.hochschulehannover.inform.data.FoodItem;
+import de.hochschulehannover.inform.data.HistoryItem;
 
 /**
  * Controls the different elements of the GUI
@@ -45,6 +51,22 @@ public final class GUIcontrol {
 			this.showError("Language file could not be found.\n" +
 					e.getLocalizedMessage());
 		}
+		
+//	     try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (InstantiationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (UnsupportedLookAndFeelException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	/**
@@ -64,6 +86,11 @@ public final class GUIcontrol {
 	 * Panel containing mask to fill out food input information
 	 */
 	private FoodAddPanel _FoodAddPanel;
+	
+	/**
+	 * Panel containing mask to update weight information.
+	 */
+	private UpdateWeightPanel _UpdateWeightPanel;
 	
 	private Date _workingDate;
 	
@@ -98,8 +125,7 @@ public final class GUIcontrol {
      * Prints a nice error message on the screen.
      */
     public void showError(String message){
-    	//FIXME Print ERROR in local tongue
-    	javax.swing.JOptionPane.showMessageDialog(null, message, "ERROR", javax.swing.JOptionPane.ERROR_MESSAGE);
+    	javax.swing.JOptionPane.showMessageDialog(null, message, this.getLocalizedString("ERROR"), javax.swing.JOptionPane.ERROR_MESSAGE);
     }
     
     /**
@@ -140,9 +166,18 @@ public final class GUIcontrol {
 		if (_FoodAddPanel == null) _FoodAddPanel = new FoodAddPanel();
 		return _FoodAddPanel;
 	}
-
+	
+	public UpdateWeightPanel getUpdateWeightPanel() {
+		if (_UpdateWeightPanel == null) _UpdateWeightPanel = new UpdateWeightPanel();
+		return _UpdateWeightPanel;
+	}
+	
+	/**
+	 * Formats working date according to locale.
+	 * @return localized String
+	 */
 	public String getLocalizedStringFromWorkingDate() {
-		// TODO add support for "yesterday" and "today"
+		// TODO add support for "yesterday"
 		return this.isToday(getWorkingDate()) == 0 ? this.getLocalizedString("FoodAddPanel.labToday") : DateFormat.getDateInstance(DateFormat.SHORT).format(getWorkingDate());
 	}
 
@@ -155,14 +190,18 @@ public final class GUIcontrol {
 		return _workingDate;
 	}
 	
-	public FoodItem[] getAllFoodItems(){
-		return dataDummy.foodList();
+	public ArrayList<FoodItem> getAllFoodItems(){
+		return dataDummy.getFoodList();
 	}
 	
-	public String[] getUnits(){
+	public String[] getNutricionUnits(){
 		return new String[] {this.getLocalizedString("units.servings"),
-			this.getLocalizedString("units.pices")
+			this.getLocalizedString("units.pieces")
 		};
+	}
+	
+	public String getLocalWeightUnit(){
+		return this.getLocalizedString("units.kg");
 	}
 	
 	/**
@@ -179,6 +218,34 @@ public final class GUIcontrol {
 	}
 
 	public Object[][] getHistoryTable(Date workingDate) {
-		return this.dataDummy.fakeHistoryTable();
+		//return this.dataDummy.fakeHistoryTable();
+		//FIXME Proper Data
+		Object[][] obj;
+		ArrayList<HistoryItem> history = this.dataDummy.fakedHistoryTable();
+		if (history == null){
+			obj = new Object[0][3];
+		}
+		else {
+			obj = new Object[history.size()][3];
+			for (int i = 0; i < history.size(); i++){
+				obj[i][0] = history.get(i).getFoodItem().getName();
+				obj[i][1] = this.getLocalizedString("Food."+ history.get(i).getMeal());
+				obj[i][2] = history.get(i).getServingSize();
+			}
+		}
+		
+		return obj;
+//		return this.dataDummy.fakeHistoryTable();
+	}
+	
+	/**
+	 * Adds intake to the list
+	 * @param servings
+	 * @param food
+	 * @param meal
+	 * @param date
+	 */
+	public void addMeal(String servings, FoodItem food, String meal, Date date){
+		this.dataDummy.addToFakedHistoryTable(new HistoryItem(food, servings, meal, date));
 	}
 }

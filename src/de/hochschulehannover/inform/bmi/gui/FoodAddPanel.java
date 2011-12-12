@@ -33,22 +33,28 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 		this.txtDinnerAmount.setText("1");
 		this.txtSnacksAmount.setText("0");
 		
-		for (int i = 0; i < _guiControl.getUnits().length; i++){
-		this.cmbBreakfastUnit.insertItemAt(_guiControl.getUnits()[i], i);
-		this.cmbLunchUnit.insertItemAt(_guiControl.getUnits()[i], i);
-		this.cmbDinnerUnit.insertItemAt(_guiControl.getUnits()[i], i);
-		this.cmbSnacksUnit.insertItemAt(_guiControl.getUnits()[i], i);
+		for (int i = 0; i < _guiControl.getNutricionUnits().length; i++){
+		this.cmbBreakfastUnit.insertItemAt(_guiControl.getNutricionUnits()[i], i);
+		this.cmbLunchUnit.insertItemAt(_guiControl.getNutricionUnits()[i], i);
+		this.cmbDinnerUnit.insertItemAt(_guiControl.getNutricionUnits()[i], i);
+		this.cmbSnacksUnit.insertItemAt(_guiControl.getNutricionUnits()[i], i);
 		}
 		this.cmbBreakfastUnit.setSelectedIndex(0);
 		this.cmbLunchUnit.setSelectedIndex(0);
 		this.cmbDinnerUnit.setSelectedIndex(0);
+		this.cmbSnacksUnit.setSelectedIndex(0);
+		
+		this.cmbBreakfastUnit.setEnabled(false);
+		this.cmbLunchUnit.setEnabled(false);
+		this.cmbDinnerUnit.setEnabled(false);
+		this.cmbSnacksUnit.setEnabled(false);
 
 		
-		for (int i = 0; i < _guiControl.getAllFoodItems().length; i++){
-			this.cmbBreakfastItem.insertItemAt(_guiControl.getAllFoodItems()[i].getName(), i);
-			this.cmbLunchItem.insertItemAt(_guiControl.getAllFoodItems()[i].getName(), i);
-			this.cmbDinnerItem.insertItemAt(_guiControl.getAllFoodItems()[i].getName(), i);
-			this.cmbSnacksItem.insertItemAt(_guiControl.getAllFoodItems()[i].getName(), i);
+		for (int i = 0; i < _guiControl.getAllFoodItems().size(); i++){
+			this.cmbBreakfastItem.insertItemAt(_guiControl.getAllFoodItems().get(i).getName(), i);
+			this.cmbLunchItem.insertItemAt(_guiControl.getAllFoodItems().get(i).getName(), i);
+			this.cmbDinnerItem.insertItemAt(_guiControl.getAllFoodItems().get(i).getName(), i);
+			this.cmbSnacksItem.insertItemAt(_guiControl.getAllFoodItems().get(i).getName(), i);
 		}
 		
 		buttEarlier.setActionCommand("earlier");
@@ -57,6 +63,18 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 		buttLater.setActionCommand("later");
 		buttLater.addActionListener(this);
 		buttLater.setEnabled(false);
+		
+		this.buttBreakfastAdd.setActionCommand("addBreakfast");
+		buttBreakfastAdd.addActionListener(this);
+		
+		this.buttLunchAdd.setActionCommand("addLunch");
+		buttLunchAdd.addActionListener(this);
+		
+		this.buttDinnerAdd.setActionCommand("addDinner");
+		buttDinnerAdd.addActionListener(this);
+		
+		this.buttSnacksAdd.setActionCommand("addSnack");
+		buttSnacksAdd.addActionListener(this);
 		
 		this.refillTable();
 	}
@@ -328,6 +346,10 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if ("earlier".equals(e.getActionCommand())) incDate(-1);
 		if ("later".equals(e.getActionCommand())) incDate(1);
+		if ("addBreakfast".equals(e.getActionCommand())) addBreakfast();
+		if ("addLunch".equals(e.getActionCommand())) addLunch();
+		if ("addDinner".equals(e.getActionCommand())) addDinner();
+		if ("addSnack".equals(e.getActionCommand())) addSnack();
 	}
 	
 	private void incDate(int days){
@@ -342,14 +364,49 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 	}
 	
 	private void refillTable(){
-Object columnNames[] = { _guiControl.getLocalizedString("FoodAddPanel.tableAmount"),
-		_guiControl.getLocalizedString("FoodAddPanel.tableUnit"),
-		_guiControl.getLocalizedString("FoodAddPanel.tableFood")};
+		Object columnNames[] = { _guiControl.getLocalizedString("FoodAddPanel.tableFood"),
+				_guiControl.getLocalizedString("FoodAddPanel.tableMeal"),
+				_guiControl.getLocalizedString("FoodAddPanel.tableAmount")};
 		this.tblEaten = new JTable(_guiControl.getHistoryTable(_guiControl.getWorkingDate()), columnNames);
-		
 		scrollPane1.setViewportView(tblEaten);
 		this.splitPane1.setBottomComponent(scrollPane1);
 		//this.revalidate();
+	}
+	
+	private void addBreakfast(){
+		addMeal(this.txtBreakfastAmount.getText(), this.cmbBreakfastItem.getSelectedIndex(), "Breakfast");
+	}
+	
+	private void addLunch(){
+		addMeal(this.txtLunchAmount.getText(), this.cmbLunchItem.getSelectedIndex(), "Lunch");
+	}
+	
+	private void addDinner(){
+		addMeal(this.txtDinnerAmount.getText(), this.cmbDinnerItem.getSelectedIndex(), "Dinner");
+	}
+	
+	private void addSnack(){
+		addMeal(this.txtSnacksAmount.getText(), this.cmbSnacksItem.getSelectedIndex(), "Snacks");
+	}
+	
+	private void addMeal(String servings, int itemID, String meal){
+		if (itemID < 0){
+			_guiControl.showError(_guiControl.getLocalizedString("Error.no_item_selected"));
+			return;
+		}
+		int iServings = -1;
+		try{
+			iServings = Integer.parseInt(servings);
+		} catch (NumberFormatException e){
+			_guiControl.showError(_guiControl.getLocalizedString("Error.enter_number"));
+			return;
+		}
+		if (iServings < 1) {
+			_guiControl.showError(_guiControl.getLocalizedString("Error.enter_at_least_one"));
+			return;
+		}
+		_guiControl.addMeal(servings, _guiControl.getAllFoodItems().get(itemID), meal, _guiControl.getWorkingDate());
+		this.refillTable();
 	}
 }
 

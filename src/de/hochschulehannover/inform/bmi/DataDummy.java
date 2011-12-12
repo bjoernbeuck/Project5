@@ -1,6 +1,8 @@
 package de.hochschulehannover.inform.bmi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
@@ -9,6 +11,7 @@ import de.beuck.bjoern.data.IntakenHistory;
 import de.beuck.bjoern.data.NutrialInformation;
 import de.beuck.bjoern.data.WeightHistory;
 import de.hochschulehannover.inform.data.FoodItem;
+import de.hochschulehannover.inform.data.HistoryItem;
 
 public class DataDummy {
 
@@ -29,15 +32,29 @@ public class DataDummy {
 
 	}
 	
-	public FoodItem[] foodList(){
-		return new FoodItem[] {
-				new FoodItem("01", "Sample Food 1"),
-				new FoodItem("02", "Sample Food 2")};
+	private ArrayList<HistoryItem> _history;
+	
+	
+	
+	public ArrayList<FoodItem> getFoodList(){
+		ArrayList<FoodItem> arl = new ArrayList<FoodItem>();
+		arl.add(new FoodItem("01", "Sample Food 1", "Servings"));
+		arl.add(new FoodItem("02", "Sample Food 2", "Servings"));
+		return arl;
+	}
+	
+	public void addToFakedHistoryTable(HistoryItem historyItem){
+		if (_history == null) _history = new ArrayList<HistoryItem>();
+		_history.add(historyItem);
 	}
 
-	public Object[][] fakeHistoryTable() {
-		return new Object[][] {{"1", "Servings", "Sample Food 1"}, 
-				{"3", "Pices", "SampleFood 2"}};
+	public ArrayList<HistoryItem> fakedHistoryTable() {
+//		_history = new ArrayList<HistoryItem>();
+//		_history.add(new HistoryItem(getFoodList().get(0), "1", "Breakfast", new Date()));
+//		_history.add(new HistoryItem(getFoodList().get(1), "3", "Dinner", new Date()));
+		return _history;
+//		return new Object[][] {{getFoodList().get(0), "1", "Breakfast"},
+//				{getFoodList().get(1), "3", "Dinner"}};
 	}
 	
 }

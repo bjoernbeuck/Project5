@@ -22,8 +22,11 @@ public class MainView extends JFrame{
 
 	public void run() {
 		
+		int c = 0;
 		
-		this.setSize(new Dimension(640, 480));
+		
+		this.setSize(new Dimension(670, 350));
+		this.setMinimumSize(new Dimension(650, 300));
 		this.setDefaultCloseOperation(MainView.EXIT_ON_CLOSE);
 		this.setTitle(_guiControl.getLocalizedString("programme.name"));
 		
@@ -33,17 +36,22 @@ public class MainView extends JFrame{
 		jtp.setTabPlacement(JTabbedPane.LEFT);
 		
 		jtp.addTab(_guiControl.getLocalizedString("tab.updateinfo"), _guiControl.getFoodAddPanel());
-		jtp.setMnemonicAt(0, _guiControl.getLocalizedChar("tab.updateinfo.mn"));
+		jtp.setMnemonicAt(c, _guiControl.getLocalizedChar("tab.updateinfo.mn"));
+		c++; // no pun intended
 		
-		JPanel foo = new JPanel();
-		foo.setBackground(Color.black);
-		
-		jtp.addTab(_guiControl.getLocalizedString("tab.history"), foo);
-		jtp.setMnemonicAt(1, _guiControl.getLocalizedChar("tab.history.mn"));
+		jtp.addTab(_guiControl.getLocalizedString("tab.updateweight"), _guiControl.getUpdateWeightPanel());
+		jtp.setMnemonicAt(c, _guiControl.getLocalizedChar("tab.updateweight.mn"));
+		c++;
 		
 		jtp.addTab(_guiControl.getLocalizedString("tab.exercises"), new java.awt.Panel());
-		jtp.setMnemonicAt(2, _guiControl.getLocalizedChar("tab.exercises.mn"));
-		jtp.setEnabledAt(2, false);
+		jtp.setMnemonicAt(c, _guiControl.getLocalizedChar("tab.exercises.mn"));
+		jtp.setEnabledAt(c, false);
+		c++;
+		
+		jtp.addTab(_guiControl.getLocalizedString("tab.history"), new java.awt.Panel());
+		jtp.setMnemonicAt(c, _guiControl.getLocalizedChar("tab.history.mn"));
+		jtp.setEnabledAt(c, false);
+		c++;
 		
 		this.add(jtp);
 		

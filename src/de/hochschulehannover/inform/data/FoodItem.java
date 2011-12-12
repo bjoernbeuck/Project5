@@ -7,7 +7,7 @@ public class FoodItem {
 	 * @param id
 	 * @param name
 	 */
-	public FoodItem(String id, String name){
+	public FoodItem(String id, String name, String servingsize){
 		_ID = id;
 		_Name = name;
 	}
@@ -23,4 +23,12 @@ public class FoodItem {
 	public String getName(){
 		return _Name;
 	}
+	
+	private String _ServingSize;
+	
+	public String getServingSize(){
+		return _ServingSize;
+	}
+	
+	
 }
