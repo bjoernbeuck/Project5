@@ -1,5 +1,6 @@
 package de.hochschulehannover.inform.bmi;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -7,6 +8,7 @@ import de.beuck.bjoern.data.DataProvider;
 import de.beuck.bjoern.data.IntakenHistory;
 import de.beuck.bjoern.data.NutrialInformation;
 import de.beuck.bjoern.data.WeightHistory;
+import de.hochschulehannover.inform.data.FoodItem;
 
 public class DataDummy {
 
@@ -25,6 +27,17 @@ public class DataDummy {
 			provider.setNewIntaken(new IntakenHistory(rand.nextDouble() % 5, new NutrialInformation(rand.nextInt()%2600, rand.nextDouble() % 1000)), new Date(initDate + (oneday * i)));
 		}
 
+	}
+	
+	public FoodItem[] foodList(){
+		return new FoodItem[] {
+				new FoodItem("01", "Sample Food 1"),
+				new FoodItem("02", "Sample Food 2")};
+	}
+
+	public Object[][] fakeHistoryTable() {
+		return new Object[][] {{"1", "Servings", "Sample Food 1"}, 
+				{"3", "Pices", "SampleFood 2"}};
 	}
 	
 }

@@ -1,9 +1,15 @@
 package de.hochschulehannover.inform.bmi.gui;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
+
+import de.hochschulehannover.inform.bmi.DataDummy;
+import de.hochschulehannover.inform.data.FoodItem;
 
 /**
  * Controls the different elements of the GUI
@@ -36,7 +42,7 @@ public final class GUIcontrol {
 		} catch (java.util.MissingResourceException e){
 			LOGGER.error(e.getMessage());
 			e.printStackTrace();
-			this.showError("Language file could not be found. \n" +
+			this.showError("Language file could not be found.\n" +
 					e.getLocalizedMessage());
 		}
 	}
@@ -49,7 +55,19 @@ public final class GUIcontrol {
 		return _locale;
 	}
 	
+	/**
+	 * Resource Bundle with localized messages
+	 */
 	private ResourceBundle _guiMessages;
+	
+	/**
+	 * Panel containing mask to fill out food input information
+	 */
+	private FoodAddPanel _FoodAddPanel;
+	
+	private Date _workingDate;
+	
+	private DataDummy dataDummy;
 	
 	/**
 	 * Instance of GUIcontrol.
@@ -62,7 +80,7 @@ public final class GUIcontrol {
 	private GUIcontrol(){
 		//String lang = System.getProperty("user.language");
 		this.set_locale(System.getProperty("user.language"));
-		
+		dataDummy = new DataDummy();
 	}
 
 	/**
@@ -84,7 +102,83 @@ public final class GUIcontrol {
     	javax.swing.JOptionPane.showMessageDialog(null, message, "ERROR", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
     
-    public String getLocalizedString(String key) throws java.util.MissingResourceException{
-    	return _guiMessages.getString(key);
+    /**
+     * String in locale language if available
+     * @param key Identifier
+     * @return translated string
+     * @see getLocalizedChar
+     */
+    public String getLocalizedString(String key) {
+    	try{
+    		return _guiMessages.getString(key);
+    	} catch (java.util.MissingResourceException e) {
+    		LOGGER.error(e.getMessage());
+    		return key;
+    	}
     }
+    
+    /**
+     * First letter of a string in local language if available
+     * @param key Identifier
+     * @return first letter of translated string
+     * @throws java.util.MissingResourceException
+     * @see getLocalizedString
+     */
+    public char getLocalizedChar(String key) throws java.util.MissingResourceException{
+    	return _guiMessages.getString(key).toCharArray()[0];
+    }
+
+	public void quit() {
+		System.exit(0);
+	}
+
+	/**
+	 * Get FoodAddPanel
+	 * @return JPanel
+	 */
+	public FoodAddPanel getFoodAddPanel() {
+		if (_FoodAddPanel == null) _FoodAddPanel = new FoodAddPanel();
+		return _FoodAddPanel;
+	}
+
+	public String getLocalizedStringFromWorkingDate() {
+		// TODO add support for "yesterday" and "today"
+		return this.isToday(getWorkingDate()) == 0 ? this.getLocalizedString("FoodAddPanel.labToday") : DateFormat.getDateInstance(DateFormat.SHORT).format(getWorkingDate());
+	}
+
+	public void setWorkingDate(Date _workingDate) {
+		this._workingDate = _workingDate;
+	}
+
+	public Date getWorkingDate() {
+		if (_workingDate == null) _workingDate = new Date();
+		return _workingDate;
+	}
+	
+	public FoodItem[] getAllFoodItems(){
+		return dataDummy.foodList();
+	}
+	
+	public String[] getUnits(){
+		return new String[] {this.getLocalizedString("units.servings"),
+			this.getLocalizedString("units.pices")
+		};
+	}
+	
+	/**
+	 * Compare Date with current date.
+	 * @param date 
+	 * @return offset in days, i. e. 0 for today, -1 for yesterday
+	 */
+	public int isToday(Date date){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal.get(Calendar.YEAR) + cal.get(Calendar.DAY_OF_YEAR) -
+			Calendar.getInstance().get(Calendar.YEAR) - 
+			Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+	}
+
+	public Object[][] getHistoryTable(Date workingDate) {
+		return this.dataDummy.fakeHistoryTable();
+	}
 }

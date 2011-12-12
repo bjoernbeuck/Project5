@@ -34,6 +34,7 @@ import de.beuck.bjoern.data.DataProvider;
 import de.beuck.bjoern.lang.LanguageExecption;
 import de.beuck.bjoern.lang.LocationManager;
 import de.hochschulehannover.inform.bmi.gui.GUIcontrol;
+import de.hochschulehannover.inform.bmi.gui.MainView;
 
 public class BMItool {
 
@@ -65,7 +66,9 @@ public class BMItool {
 			e.printStackTrace();
 		}
 
-		_guiControl = GUIcontrol.getInstance();
+		//_guiControl = GUIcontrol.getInstance();
+		MainView mv = new MainView();
+		mv.run();
 		
 		
 //		EventQueue.invokeLater(new Runnable() {
