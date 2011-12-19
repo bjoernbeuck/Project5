@@ -25,8 +25,8 @@ public class MainView extends JFrame{
 		int c = 0;
 		
 		
-		this.setSize(new Dimension(670, 350));
-		this.setMinimumSize(new Dimension(650, 300));
+		this.setSize(new Dimension(700, 420));
+		this.setMinimumSize(new Dimension(700, 420));
 		this.setDefaultCloseOperation(MainView.EXIT_ON_CLOSE);
 		this.setTitle(_guiControl.getLocalizedString("programme.name"));
 		
@@ -43,9 +43,9 @@ public class MainView extends JFrame{
 		jtp.setMnemonicAt(c, _guiControl.getLocalizedChar("tab.updateweight.mn"));
 		c++;
 		
-		jtp.addTab(_guiControl.getLocalizedString("tab.exercises"), new java.awt.Panel());
+		jtp.addTab(_guiControl.getLocalizedString("tab.exercises"), _guiControl.getAddActivityPanel());
 		jtp.setMnemonicAt(c, _guiControl.getLocalizedChar("tab.exercises.mn"));
-		jtp.setEnabledAt(c, false);
+		//jtp.setEnabledAt(c, false);
 		c++;
 		
 		jtp.addTab(_guiControl.getLocalizedString("tab.history"), new java.awt.Panel());

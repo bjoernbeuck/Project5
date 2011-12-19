@@ -194,6 +194,7 @@ public class UpdateWeightPanel extends JPanel implements ActionListener{
 				)
 		);
 
+		
 		this.add(panel1);
 		//		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents

@@ -90,10 +90,15 @@ public final class GUIcontrol {
 	/**
 	 * Panel containing mask to update weight information.
 	 */
-	private UpdateWeightPanel _UpdateWeightPanel;
+	private WeightUpdatePanel _UpdateWeightPanel;
+	
+	private FitnessAddPanel _AddActivityPanel;
 	
 	private Date _workingDate;
 	
+	/**
+	 * It's a fake!
+	 */
 	private DataDummy dataDummy;
 	
 	/**
@@ -167,8 +172,8 @@ public final class GUIcontrol {
 		return _FoodAddPanel;
 	}
 	
-	public UpdateWeightPanel getUpdateWeightPanel() {
-		if (_UpdateWeightPanel == null) _UpdateWeightPanel = new UpdateWeightPanel();
+	public WeightUpdatePanel getUpdateWeightPanel() {
+		if (_UpdateWeightPanel == null) _UpdateWeightPanel = new WeightUpdatePanel();
 		return _UpdateWeightPanel;
 	}
 	
@@ -247,5 +252,10 @@ public final class GUIcontrol {
 	 */
 	public void addMeal(String servings, FoodItem food, String meal, Date date){
 		this.dataDummy.addToFakedHistoryTable(new HistoryItem(food, servings, meal, date));
+	}
+	
+	public FitnessAddPanel getAddActivityPanel(){
+		if (_AddActivityPanel == null) _AddActivityPanel = new FitnessAddPanel();
+		return _AddActivityPanel;
 	}
 }
