@@ -5,13 +5,16 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import de.beuck.bjoern.data.DataProvider;
 import de.beuck.bjoern.data.IntakenHistory;
 import de.beuck.bjoern.data.NutrialInformation;
 import de.beuck.bjoern.data.WeightHistory;
 import de.hochschulehannover.inform.data.FoodItem;
-import de.hochschulehannover.inform.data.HistoryItem;
+import de.hochschulehannover.inform.data.FoodHistoryItem;
+import de.hochschulehannover.inform.data.WeightHistoryItem;
 
 public class DataDummy {
 
@@ -32,8 +35,9 @@ public class DataDummy {
 
 	}
 	
-	private ArrayList<HistoryItem> _history;
+	private ArrayList<FoodHistoryItem> _history;
 	
+	private SortedSet<WeightHistoryItem> _weightHistory;
 	
 	
 	public ArrayList<FoodItem> getFoodList(){
@@ -43,12 +47,12 @@ public class DataDummy {
 		return arl;
 	}
 	
-	public void addToFakedHistoryTable(HistoryItem historyItem){
-		if (_history == null) _history = new ArrayList<HistoryItem>();
-		_history.add(historyItem);
+	public void addToFakedHistoryTable(FoodHistoryItem foodHistoryItem){
+		if (_history == null) _history = new ArrayList<FoodHistoryItem>();
+		_history.add(foodHistoryItem);
 	}
 
-	public ArrayList<HistoryItem> fakedHistoryTable() {
+	public ArrayList<FoodHistoryItem> fakedHistoryTable() {
 //		_history = new ArrayList<HistoryItem>();
 //		_history.add(new HistoryItem(getFoodList().get(0), "1", "Breakfast", new Date()));
 //		_history.add(new HistoryItem(getFoodList().get(1), "3", "Dinner", new Date()));
@@ -56,5 +60,17 @@ public class DataDummy {
 //		return new Object[][] {{getFoodList().get(0), "1", "Breakfast"},
 //				{getFoodList().get(1), "3", "Dinner"}};
 	}
+	
+	public SortedSet<WeightHistoryItem> getWeightHistory(){
+		//if (_weightHistory == null) _weightHistory = new TreeSet<WeightHistoryItem>();
+		return _weightHistory;
+	}
+
+	public void addToFakedWeightHistory(WeightHistoryItem weightHistoryItem) {
+		if (_weightHistory == null) _weightHistory = new TreeSet<WeightHistoryItem>();
+		_weightHistory.add(weightHistoryItem);
+	}
+	
+	
 	
 }

@@ -72,7 +72,7 @@ public class UpdateWeightPanel extends JPanel implements ActionListener{
 		buttEarlier.setText(_guiControl.getLocalizedString("UpdateWeightPanel.buttEarlier"));
 
 		//---- labDate ----
-		labDate.setText(_guiControl.getLocalizedStringFromWorkingDate());
+		labDate.setText(_guiControl.getLocalizedStringFromDate(_guiControl.getWorkingDate()));
 
 		//---- buttLater ----
 		buttLater.setText(_guiControl.getLocalizedString("UpdateWeightPanel.buttLater"));
@@ -252,7 +252,7 @@ public class UpdateWeightPanel extends JPanel implements ActionListener{
 			this.buttLater.setEnabled(false);
 		else this.buttLater.setEnabled(true);
 		_guiControl.setWorkingDate(cal.getTime());
-		this.labDate.setText(_guiControl.getLocalizedStringFromWorkingDate());
+		this.labDate.setText(_guiControl.getLocalizedStringFromDate(_guiControl.getWorkingDate()));
 	}
 
 	//	private void refillTable(){

@@ -7,7 +7,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import org.apache.log4j.Logger;
+
 public class MenuBar extends JMenuBar implements ActionListener{
+	
+	/**
+	 * Logger!
+	 */
+	private static Logger _LOGGER = Logger.getLogger(MenuBar.class);
 
 	/**
 	 * serialVersionUID
@@ -25,11 +32,19 @@ public class MenuBar extends JMenuBar implements ActionListener{
 	}
 	
 	private JMenu createFileMenu(){
-		JMenu fileMenu = new JMenu(_guiControl.getLocalizedString("menu.file"));
-		fileMenu.setMnemonic(_guiControl.getLocalizedChar("menu.file.mn"));
+		JMenu fileMenu = new JMenu(_guiControl.getLocalizedString("gui.file"));
+		try{
+			fileMenu.setMnemonic(_guiControl.getLocalizedChar("gui.file.mn"));
+		} catch (java.util.MissingResourceException e){
+			_LOGGER.warn("No mnemonic for 'gui.file'.", e);
+		}
 		
-		JMenuItem quit = new JMenuItem(_guiControl.getLocalizedString("menu.quit"));
-		quit.setMnemonic(_guiControl.getLocalizedChar("menu.quit.mn"));
+		JMenuItem quit = new JMenuItem(_guiControl.getLocalizedString("gui.quit"));
+		try{
+			quit.setMnemonic(_guiControl.getLocalizedChar("gui.quit.mn"));
+		} catch (java.util.MissingResourceException e){
+			_LOGGER.warn("No Mnemonic for 'gui.quit'.", e);
+		}
 		quit.setActionCommand("quit");
 		quit.addActionListener(this);
 		

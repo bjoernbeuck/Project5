@@ -27,6 +27,14 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 		fillComponents();
 	}
 	
+	/**
+	 * This is evil, but I am tired
+	 */
+	public void refresh(){
+		refillTable();
+		incDate(0);
+	}
+	
 	private void fillComponents() {
 		this.txtBreakfastAmount.setText("1");
 		this.txtLunchAmount.setText("1");
@@ -57,26 +65,9 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 			this.cmbSnacksItem.insertItemAt(_guiControl.getAllFoodItems().get(i).getName(), i);
 		}
 		
-		buttEarlier.setActionCommand("earlier");
-		buttEarlier.addActionListener(this);
 		
-		buttLater.setActionCommand("later");
-		buttLater.addActionListener(this);
-		buttLater.setEnabled(false);
 		
-		this.buttBreakfastAdd.setActionCommand("addBreakfast");
-		buttBreakfastAdd.addActionListener(this);
-		
-		this.buttLunchAdd.setActionCommand("addLunch");
-		buttLunchAdd.addActionListener(this);
-		
-		this.buttDinnerAdd.setActionCommand("addDinner");
-		buttDinnerAdd.addActionListener(this);
-		
-		this.buttSnacksAdd.setActionCommand("addSnack");
-		buttSnacksAdd.addActionListener(this);
-		
-		this.refillTable();
+		this.refresh();
 	}
 
 	static GUIcontrol _guiControl;
@@ -159,41 +150,41 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 			}
 
 			//---- labHead ----
-			labHead.setText(_guiControl.getLocalizedString("FoodAddPanel.labHead"));
+			labHead.setText(_guiControl.getLocalizedString("add_foods_youve_eaten"));
 			labHead.setFont(labHead.getFont().deriveFont(labHead.getFont().getStyle() | Font.BOLD));
 
 			//---- labBreakfast ----
-			labBreakfast.setText(_guiControl.getLocalizedString("FoodAddPanel.labBreakfast"));
+			labBreakfast.setText(_guiControl.getLocalizedString("breakfast"));
 
 			//---- labLunch ----
-			labLunch.setText(_guiControl.getLocalizedString("FoodAddPanel.labLunch"));
+			labLunch.setText(_guiControl.getLocalizedString("lunch"));
 
 			//---- labDinner ----
-			labDinner.setText(_guiControl.getLocalizedString("FoodAddPanel.labDinner"));
+			labDinner.setText(_guiControl.getLocalizedString("dinner"));
 
 			//---- labSnacks ----
-			labSnacks.setText(_guiControl.getLocalizedString("FoodAddPanel.labSnacks"));
+			labSnacks.setText(_guiControl.getLocalizedString("snacks"));
 
 			//---- buttBreakfastAdd ----
-			buttBreakfastAdd.setText(_guiControl.getLocalizedString("FoodAddPanel.buttAdd"));
+			buttBreakfastAdd.setText(_guiControl.getLocalizedString("gui.add"));
 
 			//---- buttLunchAdd ----
-			buttLunchAdd.setText(_guiControl.getLocalizedString("FoodAddPanel.buttAdd"));
+			buttLunchAdd.setText(_guiControl.getLocalizedString("gui.add"));
 
 			//---- buttDinnerAdd ----
-			buttDinnerAdd.setText(_guiControl.getLocalizedString("FoodAddPanel.buttAdd"));
+			buttDinnerAdd.setText(_guiControl.getLocalizedString("gui.add"));
 
 			//---- buttSnacksAdd ----
-			buttSnacksAdd.setText(_guiControl.getLocalizedString("FoodAddPanel.buttAdd"));
+			buttSnacksAdd.setText(_guiControl.getLocalizedString("gui.add"));
 
 			//---- buttEarlier ----
-			buttEarlier.setText(_guiControl.getLocalizedString("FoodAddPanel.buttEarlier"));
+			buttEarlier.setText(_guiControl.getLocalizedString("gui.earlier"));
 
 			//---- labDate ----
-			labDate.setText(_guiControl.getLocalizedStringFromWorkingDate());
+			labDate.setText(_guiControl.getLocalizedStringFromDate(_guiControl.getWorkingDate()));
 
 			//---- buttLater ----
-			buttLater.setText(_guiControl.getLocalizedString("FoodAddPanel.buttLater"));
+			buttLater.setText(_guiControl.getLocalizedString("gui.later"));
 			
 			GroupLayout panel1Layout = new GroupLayout(panel1);
 			panel1.setLayout(panel1Layout);
@@ -303,6 +294,25 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 						.addComponent(splitPane1, GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
 			);
 			
+			buttEarlier.setActionCommand("earlier");
+			buttEarlier.addActionListener(this);
+			
+			buttLater.setActionCommand("later");
+			buttLater.addActionListener(this);
+			
+			
+			this.buttBreakfastAdd.setActionCommand("addBreakfast");
+			buttBreakfastAdd.addActionListener(this);
+			
+			this.buttLunchAdd.setActionCommand("addLunch");
+			buttLunchAdd.addActionListener(this);
+			
+			this.buttDinnerAdd.setActionCommand("addDinner");
+			buttDinnerAdd.addActionListener(this);
+			
+			this.buttSnacksAdd.setActionCommand("addSnack");
+			buttSnacksAdd.addActionListener(this);
+			
 			this.add(panel1);
 		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -353,6 +363,7 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 	}
 	
 	private void incDate(int days){
+		//FIXME to much logic here!
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(_guiControl.getWorkingDate());
 		cal.add(Calendar.DATE, days);
@@ -360,13 +371,13 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 			this.buttLater.setEnabled(false);
 		else this.buttLater.setEnabled(true);
 		_guiControl.setWorkingDate(cal.getTime());
-		this.labDate.setText(_guiControl.getLocalizedStringFromWorkingDate());
+		this.labDate.setText(_guiControl.getLocalizedStringFromDate(_guiControl.getWorkingDate()));
 	}
 	
 	private void refillTable(){
-		Object columnNames[] = { _guiControl.getLocalizedString("FoodAddPanel.tableFood"),
-				_guiControl.getLocalizedString("FoodAddPanel.tableMeal"),
-				_guiControl.getLocalizedString("FoodAddPanel.tableAmount")};
+		Object columnNames[] = { _guiControl.getLocalizedString("food"),
+				_guiControl.getLocalizedString("meal"),
+				_guiControl.getLocalizedString("number_of_servings_eaten")};
 		this.tblEaten = new JTable(_guiControl.getHistoryTable(_guiControl.getWorkingDate()), columnNames);
 		scrollPane1.setViewportView(tblEaten);
 		this.splitPane1.setBottomComponent(scrollPane1);

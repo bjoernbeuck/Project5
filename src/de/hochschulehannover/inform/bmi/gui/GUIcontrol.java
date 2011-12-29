@@ -2,6 +2,7 @@ package de.hochschulehannover.inform.bmi.gui;
 
 import java.awt.Component;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,7 +16,8 @@ import org.apache.log4j.Logger;
 
 import de.hochschulehannover.inform.bmi.DataDummy;
 import de.hochschulehannover.inform.data.FoodItem;
-import de.hochschulehannover.inform.data.HistoryItem;
+import de.hochschulehannover.inform.data.FoodHistoryItem;
+import de.hochschulehannover.inform.data.WeightHistoryItem;
 
 /**
  * Controls the different elements of the GUI
@@ -26,7 +28,7 @@ public final class GUIcontrol {
 	/**
 	 * Logger!
 	 */
-	private static Logger LOGGER = Logger.getLogger(GUIcontrol.class);
+	private static Logger _LOGGER = Logger.getLogger(GUIcontrol.class);
 	
 	/**
 	 * Current locale.
@@ -41,12 +43,12 @@ public final class GUIcontrol {
 	 * @throws NullPointerException if argument is NULL.
 	 */
 	public void set_locale(String locale) throws NullPointerException{
-		LOGGER.info("Setting language to '" + locale + "'.");
+		_LOGGER.info("Setting language to '" + locale + "'.");
 		this._locale = new Locale(locale);
 		try{
 			_guiMessages = ResourceBundle.getBundle("GUIMessages", _locale);
 		} catch (java.util.MissingResourceException e){
-			LOGGER.error(e.getMessage());
+			_LOGGER.error(e.getMessage());
 			e.printStackTrace();
 			this.showError("Language file could not be found.\n" +
 					e.getLocalizedMessage());
@@ -140,12 +142,26 @@ public final class GUIcontrol {
      * @see getLocalizedChar
      */
     public String getLocalizedString(String key) {
+    	//TODO let throw exception and let caller handle problem (easier to debug)
     	try{
     		return _guiMessages.getString(key);
     	} catch (java.util.MissingResourceException e) {
-    		LOGGER.error(e.getMessage());
+    		_LOGGER.error(e.getMessage());
     		return key;
     	}
+    }
+    
+    /**
+     * String in locale language if available
+     * @param key Identifier
+     * @param parameters to replace variables with
+     * @return translated string
+     * @see getLocalizedChar
+     */
+    public String getLocalizedString(String key, String[] parameters){
+    	MessageFormat mf = new MessageFormat("");
+    	mf.applyPattern(getLocalizedString(key));
+    	return mf.format(parameters);
     }
     
     /**
@@ -178,12 +194,12 @@ public final class GUIcontrol {
 	}
 	
 	/**
-	 * Formats working date according to locale.
+	 * Formats date according to locale.
 	 * @return localized String
 	 */
-	public String getLocalizedStringFromWorkingDate() {
+	public String getLocalizedStringFromDate(Date date) {
 		// TODO add support for "yesterday"
-		return this.isToday(getWorkingDate()) == 0 ? this.getLocalizedString("FoodAddPanel.labToday") : DateFormat.getDateInstance(DateFormat.SHORT).format(getWorkingDate());
+		return this.isToday(getWorkingDate()) == 0 ? this.getLocalizedString("gui.today") : DateFormat.getDateInstance(DateFormat.SHORT).format(date);
 	}
 
 	public void setWorkingDate(Date _workingDate) {
@@ -200,13 +216,15 @@ public final class GUIcontrol {
 	}
 	
 	public String[] getNutricionUnits(){
-		return new String[] {this.getLocalizedString("units.servings"),
-			this.getLocalizedString("units.pieces")
+		return new String[] {this.getLocalizedString("servings"),
+			this.getLocalizedString("pieces")
 		};
 	}
 	
+	// Gets the name of the local weight unit for display.
 	public String getLocalWeightUnit(){
-		return this.getLocalizedString("units.kg");
+		//TODO add support for other units
+		return this.getLocalizedString("kg");
 	}
 	
 	/**
@@ -226,7 +244,7 @@ public final class GUIcontrol {
 		//return this.dataDummy.fakeHistoryTable();
 		//FIXME Proper Data
 		Object[][] obj;
-		ArrayList<HistoryItem> history = this.dataDummy.fakedHistoryTable();
+		ArrayList<FoodHistoryItem> history = this.dataDummy.fakedHistoryTable();
 		if (history == null){
 			obj = new Object[0][3];
 		}
@@ -251,11 +269,24 @@ public final class GUIcontrol {
 	 * @param date
 	 */
 	public void addMeal(String servings, FoodItem food, String meal, Date date){
-		this.dataDummy.addToFakedHistoryTable(new HistoryItem(food, servings, meal, date));
+		this.dataDummy.addToFakedHistoryTable(new FoodHistoryItem(food, servings, meal, date));
 	}
 	
 	public FitnessAddPanel getAddActivityPanel(){
 		if (_AddActivityPanel == null) _AddActivityPanel = new FitnessAddPanel();
 		return _AddActivityPanel;
+	}
+	
+	public String getLastWeightInfo(){
+		//TODO support for non SI units
+		if (dataDummy.getWeightHistory() == null) return "";
+		return this.getLocalizedString("last_weight_WEIGHT_DATE", new String[] {
+				dataDummy.getWeightHistory().last().getWeight() + "",
+				this.getLocalizedStringFromDate(dataDummy.getWeightHistory().last().getDate())
+				});
+	}
+
+	public void addWeight(double newWeight) {
+		this.dataDummy.addToFakedWeightHistory(new WeightHistoryItem(newWeight, this.getWorkingDate()));
 	}
 }
