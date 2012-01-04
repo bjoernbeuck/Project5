@@ -1,10 +1,8 @@
 package de.hochschulehannover.inform.bmi.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -81,9 +79,10 @@ public class MainView extends JFrame{
 		
 		jtp.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent evt) {
-		        JTabbedPane pane = (JTabbedPane) evt.getSource();
+		        //JTabbedPane pane = (JTabbedPane) evt.getSource();
 		        _guiControl.getFoodAddPanel().refresh();
 		        _guiControl.getUpdateWeightPanel().refresh();
+		        _guiControl.getAddActivityPanel().refresh();
 		      }
 		});
 		

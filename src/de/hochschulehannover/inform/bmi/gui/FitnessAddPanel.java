@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import javax.swing.*;
 
+import org.apache.log4j.Logger;
+
 
 
 /**
@@ -13,9 +15,61 @@ import javax.swing.*;
  */
 public class FitnessAddPanel extends JPanel implements ActionListener{
 	
+	/**
+	 * Logger!
+	 */
+	private static Logger _LOGGER = Logger.getLogger(FitnessAddPanel.class);
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4515939951152027875L;
+	GUIcontrol _guiControl;
+	
 	public FitnessAddPanel(){
+		_guiControl = GUIcontrol.getInstance();
 		initComponents();
+		fillComponents();
+		refresh();
+	}
+	
+	private void fillComponents() {
+		try{
+			for (int i = 0; i < _guiControl.getActivities().size(); i++){
+				this.cmbActivities.insertItemAt(_guiControl.getActivities().get(i).getName(), i);
+			}
+			if (cmbActivities.getItemCount() == 0){
+				_guiControl.showError(_guiControl.getLocalizedString("Error.cannot_load"+
+				"_list_of_activities") + "\n" + _guiControl.getLocalizedString(
+				"Error.list_is_empty"));
+				_LOGGER.error("List of activities is empty.");
+				return;
+			}
+			cmbActivities.setSelectedIndex(0);
+		} catch (java.lang.NullPointerException e){
+			_guiControl.showError(_guiControl.getLocalizedString("Error.cannot_load"+
+					"_list_of_activities") + "\n" + _guiControl.getLocalizedString(
+							"Error.list_is_empty"));
+			_LOGGER.error(e.getMessage());
+		} 
+	}
+
+	public void refresh(){
+		incDate(0);
 		refillTable();
+	}
+	
+	private void incDate(int days){
+		//FIXME too much logic here
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.setTime(_guiControl.getWorkingDate());
+		cal.add(java.util.Calendar.DATE, days);
+		if (_guiControl.isToday(cal.getTime()) >= 0)
+			this.buttLater.setEnabled(false);
+		else this.buttLater.setEnabled(true);
+		_guiControl.setWorkingDate(cal.getTime());
+		this.labDate.setText(_guiControl.getLocalizedStringFromDate(_guiControl.getWorkingDate()));
+		this.refillTable();
 	}
 
 	private void initComponents() {
@@ -35,12 +89,12 @@ public class FitnessAddPanel extends JPanel implements ActionListener{
 		label2 = new JLabel();
 		label3 = new JLabel();
 		label4 = new JLabel();
-		textField1 = new JTextField();
-		comboBox1 = new JComboBox();
-		textField2 = new JTextField();
+		txtRepsOrSets = new JTextField();
+		cmbActivities = new JComboBox();
+		txtTime = new JTextField();
 		label5 = new JLabel();
-		slider1 = new JSlider();
-		button1 = new JButton();
+		sldIntensity = new JSlider();
+		buttAdd = new JButton();
 
 		//======== panel1 ========
 		{
@@ -81,56 +135,59 @@ public class FitnessAddPanel extends JPanel implements ActionListener{
 			}
 
 			//---- labHead ----
-			labHead.setText("What did you do today?");
+			labHead.setText(_guiControl.getLocalizedString("what_did_you_do_today"));
 			labHead.setFont(labHead.getFont().deriveFont(labHead.getFont().getStyle() | Font.BOLD));
 
 			//---- buttEarlier ----
-			buttEarlier.setText("Earlier");
+			buttEarlier.setText(_guiControl.getLocalizedString("gui.earlier"));
+			buttEarlier.setActionCommand("earlier");
+			buttEarlier.addActionListener(this);
 
 			//---- labDate ----
-			labDate.setText("Today");
+			labDate.setText(_guiControl.getLocalizedString("gui.today"));
 
 			//---- buttLater ----
-			buttLater.setText("Later");
+			buttLater.setText(_guiControl.getLocalizedString("gui.later"));
+			buttLater.setActionCommand("later");
+			buttLater.addActionListener(this);
 
 			//---- label1 ----
-			label1.setText("Select an Activity");
+			label1.setText(_guiControl.getLocalizedString("select_an_activity"));
 
 			//---- label2 ----
-			label2.setText("Number of Reps/Sets, if applicable");
+			label2.setText(_guiControl.getLocalizedString("number_of_reps_sets_if_applicable"));
 
 			//---- label3 ----
-			label3.setText("Timeframe");
+			label3.setText(_guiControl.getLocalizedString("timeframe"));
 
 			//---- label4 ----
-			label4.setText("How intense was your workout?");
+			label4.setText(_guiControl.getLocalizedString("how_intense_was_your_workout"));
 
 			//---- textField1 ----
-			textField1.setText("0");
+			//textField1.setText("0");
+			this.txtTime.setText("5");
 			
-			this.comboBox1.insertItemAt("Sample Fitness One", 0);
-			this.comboBox1.insertItemAt("Sample Fitness Two", 1);
-			comboBox1.setSelectedIndex(0);
 			
-			Hashtable labelTable = new Hashtable();
-			labelTable.put( new Integer( 0 ), new JLabel("Light") );
-			labelTable.put( new Integer( 1 ), new JLabel("Moderate") );
-			labelTable.put( new Integer( 2 ), new JLabel("Intense") );
-			slider1.setLabelTable(labelTable);
-			slider1.setValueIsAdjusting(false);
+			
+			Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+			labelTable.put( new Integer( 0 ), new JLabel(_guiControl.getLocalizedString("light")) );
+			labelTable.put( new Integer( 1 ), new JLabel(_guiControl.getLocalizedString("moderate")) );
+			labelTable.put( new Integer( 2 ), new JLabel(_guiControl.getLocalizedString("intense")) );
+			sldIntensity.setLabelTable(labelTable);
+			sldIntensity.setValueIsAdjusting(false);
 
 			//---- label5 ----
-			label5.setText("Minutes");
+			label5.setText(_guiControl.getLocalizedString("minutes"));
 
 			//---- slider1 ----
-			slider1.setMaximum(2);
-			slider1.setValue(1);
-			slider1.setPaintLabels(true);
-			slider1.setPaintTicks(true);
-			slider1.setSnapToTicks(true);
+			sldIntensity.setMaximum(2);
+			sldIntensity.setValue(1);
+			sldIntensity.setPaintLabels(true);
+			sldIntensity.setPaintTicks(true);
+			sldIntensity.setSnapToTicks(true);
 
 			//---- button1 ----
-			button1.setText("Add");
+			buttAdd.setText(_guiControl.getLocalizedString("gui.add"));
 
 			GroupLayout panel1Layout = new GroupLayout(panel1);
 			panel1.setLayout(panel1Layout);
@@ -146,19 +203,19 @@ public class FitnessAddPanel extends JPanel implements ActionListener{
 							.addComponent(label4))
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addGroup(panel1Layout.createParallelGroup()
-							.addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(slider1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(cmbActivities, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(sldIntensity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGroup(panel1Layout.createSequentialGroup()
 								.addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-									.addComponent(textField2)
-									.addComponent(textField1, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
+									.addComponent(txtTime)
+									.addComponent(txtRepsOrSets, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 								.addComponent(label5)))
 						.addContainerGap(95, Short.MAX_VALUE))
 					.addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
 						.addContainerGap()
 						.addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-							.addComponent(button1)
+							.addComponent(buttAdd)
 							.addGroup(panel1Layout.createSequentialGroup()
 								.addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 									.addGroup(GroupLayout.Alignment.LEADING, panel1Layout.createSequentialGroup()
@@ -184,22 +241,22 @@ public class FitnessAddPanel extends JPanel implements ActionListener{
 						.addGap(18, 18, 18)
 						.addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 							.addComponent(label1)
-							.addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(cmbActivities, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 							.addComponent(label2)
-							.addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(txtRepsOrSets, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 							.addComponent(label3)
-							.addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(txtTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addComponent(label5))
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 							.addComponent(label4)
-							.addComponent(slider1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(sldIntensity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGap(9, 9, 9)
-						.addComponent(button1)
+						.addComponent(buttAdd)
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(splitPane1, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
 			);
@@ -207,8 +264,8 @@ public class FitnessAddPanel extends JPanel implements ActionListener{
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 		this.setLayout(new BorderLayout());
 		
-		this.button1.setActionCommand("add");
-		button1.addActionListener(this);
+		this.buttAdd.setActionCommand("add");
+		buttAdd.addActionListener(this);
 		
 		
 		this.add(this.panel1);
@@ -229,42 +286,68 @@ public class FitnessAddPanel extends JPanel implements ActionListener{
 	private JLabel label2;
 	private JLabel label3;
 	private JLabel label4;
-	private JTextField textField1;
-	private JComboBox comboBox1;
-	private JTextField textField2;
+	private JTextField txtRepsOrSets;
+	private JComboBox cmbActivities;
+	private JTextField txtTime;
 	private JLabel label5;
-	private JSlider slider1;
-	private JButton button1;
+	private JSlider sldIntensity;
+	private JButton buttAdd;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 	
-	ArrayList<String[]> history;
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (history == null) history = new ArrayList<String[]>();
-		history.add(new String[]{this.comboBox1.getSelectedItem().toString(),
-			this.textField2.getText(),
-			this.textField1.getText()});
-		refillTable();
+		if ("earlier".equals(e.getActionCommand())) incDate(-1);
+		if ("later".equals(e.getActionCommand())) incDate(1);
+		if ("add".equals(e.getActionCommand())) addFitness();
 	}
 	
-	private void refillTable(){
-		Object columnNames[] = { "Activity",
-				"Timeframe in Minutes",
-				"Reps/Sets"};
-		Object[][] obj;
-		if (history == null){
-			obj = new Object[0][3];
+	private void addFitness() {
+		//if (history == null) history = new ArrayList<String[]>();
+		//history.add(new String[]{this.comboBox1.getSelectedItem().toString(),
+		//		this.textField2.getText(),
+		//		this.textField1.getText()});
+		if (this.cmbActivities.getSelectedIndex() < 0){
+			_guiControl.showError(_guiControl.getLocalizedString("Error.no_item_selected"));
+			return;
 		}
-		else {
-			obj = new Object[history.size()][3];
-			for (int i = 0; i < history.size(); i++){
-				obj[i][0] = history.get(i)[0];
-				obj[i][1] = history.get(i)[1];
-				obj[i][2] = history.get(i)[2];
+		int reps = -1;
+		if (!txtRepsOrSets.getText().trim().equals("")){
+			try{
+				reps = Integer.parseInt(this.txtRepsOrSets.getText());
+			} catch (NumberFormatException e){
+				_guiControl.showError(_guiControl.getLocalizedString("Error.enter_number"));
+				return;
+			}
+			if (reps < 1) {
+				_guiControl.showError(_guiControl.getLocalizedString("Error.enter_at_least_one"));
+				return;
 			}
 		}
-		this.tblEaten = new JTable(obj, columnNames);
+		
+		int timeframe = -1;
+		//if (!.getText().trim().equals("")){
+		try{
+			timeframe = Integer.parseInt(this.txtTime.getText());
+		} catch (NumberFormatException e){
+			_guiControl.showError(_guiControl.getLocalizedString("Error.enter_number"));
+			return;
+		}
+		if (timeframe < 1) {
+			_guiControl.showError(_guiControl.getLocalizedString("Error.enter_at_least_one"));
+			return;
+		}
+		//}
+		_guiControl.addActivity(_guiControl.getActivities().get(cmbActivities.getSelectedIndex()),
+				reps, timeframe, this.sldIntensity.getValue());
+		refillTable();
+	}
+
+	private void refillTable(){
+		Object columnNames[] = { _guiControl.getLocalizedString("activity"),
+				_guiControl.getLocalizedString("timeframe_in_minutes"),
+						_guiControl.getLocalizedString("reps_sets")};
+		this.tblEaten = new JTable(_guiControl.getActivityHistoryTable(_guiControl.getWorkingDate()), columnNames);
 		scrollPane1.setViewportView(tblEaten);
 		this.splitPane1.setBottomComponent(scrollPane1);
 	}

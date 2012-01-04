@@ -1,6 +1,5 @@
 package de.hochschulehannover.inform.bmi.gui;
 
-import java.awt.Component;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -9,12 +8,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 import org.apache.log4j.Logger;
 
 import de.hochschulehannover.inform.bmi.DataDummy;
+import de.hochschulehannover.inform.bmi.data.ActivityHistoryItem;
+import de.hochschulehannover.inform.data.ActivityItem;
 import de.hochschulehannover.inform.data.FoodItem;
 import de.hochschulehannover.inform.data.FoodHistoryItem;
 import de.hochschulehannover.inform.data.WeightHistoryItem;
@@ -198,8 +196,13 @@ public final class GUIcontrol {
 	 * @return localized String
 	 */
 	public String getLocalizedStringFromDate(Date date) {
-		// TODO add support for "yesterday"
-		return this.isToday(getWorkingDate()) == 0 ? this.getLocalizedString("gui.today") : DateFormat.getDateInstance(DateFormat.SHORT).format(date);
+		// TODO add support for "last Monday" and the like
+		//return this.isToday(getWorkingDate()) == 0 ? this.getLocalizedString("gui.today") : DateFormat.getDateInstance(DateFormat.SHORT).format(date);
+		switch (this.isToday(getWorkingDate())){
+		case 0: return this.getLocalizedString("gui.today");
+		case -1: return this.getLocalizedString("gui.yesterday");
+		default: return DateFormat.getDateInstance(DateFormat.SHORT).format(date);
+		}
 	}
 
 	public void setWorkingDate(Date _workingDate) {
@@ -235,16 +238,17 @@ public final class GUIcontrol {
 	public int isToday(Date date){
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		return cal.get(Calendar.YEAR) + cal.get(Calendar.DAY_OF_YEAR) -
-			Calendar.getInstance().get(Calendar.YEAR) - 
-			Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+//		return cal.get(Calendar.YEAR) + cal.get(Calendar.DAY_OF_YEAR) -
+//			Calendar.getInstance().get(Calendar.YEAR) - 
+//			Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+		return (int) ((cal.getTimeInMillis() - Calendar.getInstance().getTimeInMillis())/86400000);
 	}
 
-	public Object[][] getHistoryTable(Date workingDate) {
+	public Object[][] getFoodHistoryTable(Date workingDate) {
 		//return this.dataDummy.fakeHistoryTable();
 		//FIXME Proper Data
 		Object[][] obj;
-		ArrayList<FoodHistoryItem> history = this.dataDummy.fakedHistoryTable();
+		ArrayList<FoodHistoryItem> history = this.dataDummy.selectFoods(getWorkingDate());
 		if (history == null){
 			obj = new Object[0][3];
 		}
@@ -252,8 +256,29 @@ public final class GUIcontrol {
 			obj = new Object[history.size()][3];
 			for (int i = 0; i < history.size(); i++){
 				obj[i][0] = history.get(i).getFoodItem().getName();
-				obj[i][1] = this.getLocalizedString("Food."+ history.get(i).getMeal());
+				obj[i][1] = this.getLocalizedString(history.get(i).getMeal());
 				obj[i][2] = history.get(i).getServingSize();
+			}
+		}
+		
+		return obj;
+//		return this.dataDummy.fakeHistoryTable();
+	}
+	
+	public Object[][] getActivityHistoryTable(Date workingDate) {
+		//return this.dataDummy.fakeHistoryTable();
+		//FIXME Proper Data
+		Object[][] obj;
+		ArrayList<ActivityHistoryItem> history = this.dataDummy.selectActivities(getWorkingDate());
+		if (history == null){
+			obj = new Object[0][3];
+		}
+		else {
+			obj = new Object[history.size()][3];
+			for (int i = 0; i < history.size(); i++){
+				obj[i][0] = history.get(i).getActivityItem().getName();
+				obj[i][1] = history.get(i).getTimeframe();
+				obj[i][2] = history.get(i).getRepsOrSets() == -1 ? this.getLocalizedString("gui.sym.none") : history.get(i).getRepsOrSets();
 			}
 		}
 		
@@ -269,7 +294,7 @@ public final class GUIcontrol {
 	 * @param date
 	 */
 	public void addMeal(String servings, FoodItem food, String meal, Date date){
-		this.dataDummy.addToFakedHistoryTable(new FoodHistoryItem(food, servings, meal, date));
+		this.dataDummy.addToFakedFoodHistoryTable(new FoodHistoryItem(food, servings, meal, date));
 	}
 	
 	public FitnessAddPanel getAddActivityPanel(){
@@ -288,5 +313,15 @@ public final class GUIcontrol {
 
 	public void addWeight(double newWeight) {
 		this.dataDummy.addToFakedWeightHistory(new WeightHistoryItem(newWeight, this.getWorkingDate()));
+	}
+
+	public ArrayList<ActivityItem> getActivities() {
+		return dataDummy.getActivityList();
+	}
+
+	public void addActivity(ActivityItem activityItem, int reps, int timeframe,
+			int value) {
+		dataDummy.addToFakedActivityHistoryTabe(new ActivityHistoryItem(activityItem, reps, timeframe, value, getWorkingDate()));
+		
 	}
 }

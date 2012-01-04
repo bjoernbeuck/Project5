@@ -378,7 +378,7 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 		Object columnNames[] = { _guiControl.getLocalizedString("food"),
 				_guiControl.getLocalizedString("meal"),
 				_guiControl.getLocalizedString("number_of_servings_eaten")};
-		this.tblEaten = new JTable(_guiControl.getHistoryTable(_guiControl.getWorkingDate()), columnNames);
+		this.tblEaten = new JTable(_guiControl.getFoodHistoryTable(_guiControl.getWorkingDate()), columnNames);
 		scrollPane1.setViewportView(tblEaten);
 		this.splitPane1.setBottomComponent(scrollPane1);
 		//this.revalidate();
