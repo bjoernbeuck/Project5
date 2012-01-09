@@ -372,6 +372,7 @@ public class FoodAddPanel extends JPanel implements ActionListener{
 		else this.buttLater.setEnabled(true);
 		_guiControl.setWorkingDate(cal.getTime());
 		this.labDate.setText(_guiControl.getLocalizedStringFromDate(_guiControl.getWorkingDate()));
+		this.refillTable();
 	}
 	
 	private void refillTable(){

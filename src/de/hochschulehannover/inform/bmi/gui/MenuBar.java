@@ -29,8 +29,31 @@ public class MenuBar extends JMenuBar implements ActionListener{
 	public MenuBar(){
 		_guiControl = GUIcontrol.getInstance();
 		this.add(createFileMenu());
+		this.add(createEditMenu());
 	}
 	
+	private JMenu createEditMenu() {
+		JMenu editMenu = new JMenu(_guiControl.getLocalizedString("gui.edit"));
+		try{
+			editMenu.setMnemonic(_guiControl.getLocalizedChar("gui.edit.mn"));
+		} catch (java.util.MissingResourceException e){
+			_LOGGER.warn("No mnemonic for 'gui.edit'.", e);
+		}
+		
+		JMenuItem settings = new JMenuItem(_guiControl.getLocalizedString("gui.settings"));
+		try{
+			settings.setMnemonic(_guiControl.getLocalizedChar("gui.settings.mn"));
+		} catch (java.util.MissingResourceException e){
+			_LOGGER.warn("No Mnemonic for 'gui.settings'.", e);
+		}
+		settings.setActionCommand("settings");
+		settings.addActionListener(this);
+		
+		editMenu.add(settings);
+		
+		return editMenu;
+	}
+
 	private JMenu createFileMenu(){
 		JMenu fileMenu = new JMenu(_guiControl.getLocalizedString("gui.file"));
 		try{
@@ -56,6 +79,7 @@ public class MenuBar extends JMenuBar implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if ("quit".equals(e.getActionCommand())) _guiControl.quit();
+		else _guiControl.showDialogue(e.getActionCommand());
 	}
 
 }

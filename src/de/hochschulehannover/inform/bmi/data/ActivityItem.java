@@ -1,4 +1,4 @@
-package de.hochschulehannover.inform.data;
+package de.hochschulehannover.inform.bmi.data;
 
 public class ActivityItem {
 	

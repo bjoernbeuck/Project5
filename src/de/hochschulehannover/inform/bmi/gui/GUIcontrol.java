@@ -1,21 +1,24 @@
 package de.hochschulehannover.inform.bmi.gui;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 
 import de.hochschulehannover.inform.bmi.DataDummy;
 import de.hochschulehannover.inform.bmi.data.ActivityHistoryItem;
-import de.hochschulehannover.inform.data.ActivityItem;
-import de.hochschulehannover.inform.data.FoodItem;
-import de.hochschulehannover.inform.data.FoodHistoryItem;
-import de.hochschulehannover.inform.data.WeightHistoryItem;
+import de.hochschulehannover.inform.bmi.data.ActivityItem;
+import de.hochschulehannover.inform.bmi.data.FoodHistoryItem;
+import de.hochschulehannover.inform.bmi.data.FoodItem;
+import de.hochschulehannover.inform.bmi.data.WeightHistoryItem;
 
 /**
  * Controls the different elements of the GUI
@@ -101,10 +104,14 @@ public final class GUIcontrol {
 	 */
 	private DataDummy dataDummy;
 	
+	private SettingsView _settingsView;
+	
 	/**
 	 * Instance of GUIcontrol.
 	 */
 	private static GUIcontrol instance;
+	
+	private Properties _userProperties;
 	
 	/**
 	 * Constructor.
@@ -324,4 +331,138 @@ public final class GUIcontrol {
 		dataDummy.addToFakedActivityHistoryTabe(new ActivityHistoryItem(activityItem, reps, timeframe, value, getWorkingDate()));
 		
 	}
+
+	public void showDialogue(String actionCommand) {
+		if ("settings".equals(actionCommand)) getSettingsView().run();
+		else {
+			_LOGGER.error("There is no dialogue called '" + actionCommand + "'.");
+			this.showError(this.getLocalizedString("Error.there_is_no_DIALOGUE_dialouge", new String[] {actionCommand}));
+		}
+	}
+
+	private void setSettingsView(SettingsView _settingsView) {
+		this._settingsView = _settingsView;
+	}
+
+	private SettingsView getSettingsView() {
+		//if (_settingsView == null)
+			setSettingsView(new SettingsView());
+		return _settingsView;
+	}
+
+	private void setUserSettings(Properties _userSettings) {
+		this._userProperties = _userSettings;
+	}
+
+	private Properties getUserProperties() {
+		if (_userProperties == null)
+		{
+			setUserSettings(new Properties());
+			java.io.FileInputStream in = null;
+			try {
+				in = new java.io.FileInputStream(getSettingsFile());
+			} catch (FileNotFoundException e1) {
+				_LOGGER.info("There is no settings file at " + getSettingsFile());
+			}
+			if (in != null){
+				try{
+					getUserProperties().load(in);
+					in.close();
+				} catch (java.io.IOException e){
+					_LOGGER.error(e.getMessage());
+				}
+			}
+		}
+		return _userProperties;
+	}
+	
+	/**
+	 * Returns the value for the specified user setting.
+	 * If it does not exist the default Value will be saved and returned.
+	 * @param key
+	 * @param defaultValue
+	 * @return user setting
+	 */
+	public String getSetting(String key, String defaultValue){
+		if (!this.getUserProperties().containsKey(key)){
+			_LOGGER.info("Key '" + key + "' not found in settings file.\n" +
+					"Setting to '" + defaultValue + "'");
+			setSetting(key, defaultValue);
+		}
+		return this.getUserProperties().getProperty(key, defaultValue);
+	}
+	
+	public String getSettings(String key){
+		if (!this.getUserProperties().containsKey(key))
+			_LOGGER.warn("Key '" + key + "' not found in settings file.");
+		return this.getUserProperties().getProperty(key);
+	}
+	
+	public void setSetting(String key, String value){
+		this.getUserProperties().setProperty(key, value);
+		java.io.FileOutputStream out = null;
+		try {
+			out = new java.io.FileOutputStream(getSettingsFile());
+		} catch (FileNotFoundException e) {
+			_LOGGER.error("Cannot save user settings to " + getSettingsFile().toString() +
+					": " + e.getMessage());
+			this.showError(this.getLocalizedString("Error.cannot_save_settings") +
+					" " + this.getLocalizedString("Error.need_write_access_to_LOCATION", 
+							new String[] { getSettingsFile().toString() }));
+		}
+		if (out != null){
+		try {
+			this.getUserProperties().store(out, "This file is not intended to be manipulated manually.\n" +
+					"# Y O U  K N O W  W H A T  Y O U  D O I N G.");
+			out.close();
+		} catch (IOException e) {
+			_LOGGER.error("Cannot save user settings to " + getSettingsFile().toString() +
+					": " + e.getMessage());
+			this.showError(this.getLocalizedString("Error.cannot_save_settings") +
+					" " + this.getLocalizedString("Error.need_write_access_to_LOCATION", 
+							new String[] { getSettingsFile().toString() }));
+		}
+		
+		}
+
+	}
+	
+	/**
+	 * Gets the directory in which user settings are saved.
+	 * @return
+	 * 
+	 * I stole this from a piece of sample code from
+	 * http://stackoverflow.com/questions/193474/how-to-create-an-ini-file-to-store-some-settings-in-java
+	 */
+	private java.io.File getSettingsFile() {
+	    String userHome = System.getProperty("user.home");
+	    if(userHome == null) {
+	    	_LOGGER.error("Cannot detect user's home directory.");
+	        throw new IllegalStateException("user.home==null");
+	    }
+	    java.io.File home = new java.io.File(userHome);
+	    java.io.File settingsDirectory = new java.io.File(home, "." + this.getLocalizedString("programme_name").toLowerCase());
+	    if(!settingsDirectory.exists()) {
+	    	try{
+	        if(!settingsDirectory.mkdir()) {
+	        	_LOGGER.error("Failed to create " + settingsDirectory.toString());
+	        }
+	    	} catch (java.lang.SecurityException e){
+	    		_LOGGER.error(e.getMessage());
+	    		throw new IllegalStateException(settingsDirectory.toString());
+	    	}
+	    }
+	    return new java.io.File(settingsDirectory, "settings");
+	}
+
+	/**
+	 * Save user password
+	 * @param string
+	 * @param password
+	 */
+	public void setPassword(String string, char[] password) {
+		// TODO add some sort of deception
+		this.setSetting("password", String.valueOf(password));
+	}
+
 }

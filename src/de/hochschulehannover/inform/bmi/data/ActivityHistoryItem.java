@@ -2,8 +2,6 @@ package de.hochschulehannover.inform.bmi.data;
 
 import java.util.Date;
 
-import de.hochschulehannover.inform.data.ActivityItem;
-import de.hochschulehannover.inform.data.HistoryItem;
 
 public class ActivityHistoryItem extends HistoryItem {
 	ActivityItem _activity;

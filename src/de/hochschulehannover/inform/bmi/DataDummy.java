@@ -1,41 +1,19 @@
 package de.hochschulehannover.inform.bmi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import de.beuck.bjoern.data.DataProvider;
-import de.beuck.bjoern.data.IntakenHistory;
-import de.beuck.bjoern.data.NutrialInformation;
-import de.beuck.bjoern.data.WeightHistory;
 import de.hochschulehannover.inform.bmi.data.ActivityHistoryItem;
-import de.hochschulehannover.inform.data.ActivityItem;
-import de.hochschulehannover.inform.data.FoodItem;
-import de.hochschulehannover.inform.data.FoodHistoryItem;
-import de.hochschulehannover.inform.data.WeightHistoryItem;
+import de.hochschulehannover.inform.bmi.data.ActivityItem;
+import de.hochschulehannover.inform.bmi.data.FoodHistoryItem;
+import de.hochschulehannover.inform.bmi.data.FoodItem;
+import de.hochschulehannover.inform.bmi.data.WeightHistoryItem;
 
 public class DataDummy {
 
-	public static void createDatas(){
-		DataProvider provider = DataProvider.getInstance();
-		WeightHistory buf = null;
-		double initWeight = 76.1;
-		double dailyWeightBuf = 0.0;
-		long oneday = new Date(2011,11,2).getTime() - new Date(2011,11,1).getTime();
-		long initDate = new Date(2011,10,2).getTime();
-		Date date = new Date(2011,10,2);
-		Random rand = new Random();
-		for(int i = 0; i <= 40; ++i){
-			initWeight +=rand.nextDouble() % 1;
-			provider.setNewWeight(new WeightHistory(initWeight), new Date(initDate + (oneday * i)));
-			provider.setNewIntaken(new IntakenHistory(rand.nextDouble() % 5, new NutrialInformation(rand.nextInt()%2600, rand.nextDouble() % 1000)), new Date(initDate + (oneday * i)));
-		}
 
-	}
 	
 	private ArrayList<FoodHistoryItem> _foodHistory;
 	

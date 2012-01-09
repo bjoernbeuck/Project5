@@ -1,4 +1,4 @@
-package de.hochschulehannover.inform.data;
+package de.hochschulehannover.inform.bmi.data;
 
 import java.util.Date;
 
@@ -7,7 +7,7 @@ import java.util.Date;
  * @author jcp
  *
  */
-public abstract class HistoryItem implements Comparable{
+public abstract class HistoryItem implements Comparable<Object>{
 	protected Date _date;
 	
 	public Date getDate(){
