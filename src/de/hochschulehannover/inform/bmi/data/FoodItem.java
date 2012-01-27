@@ -1,4 +1,4 @@
-package de.hochschulehannover.inform.bmi.data;
+package data;
 
 public class FoodItem {
 	
@@ -7,9 +7,10 @@ public class FoodItem {
 	 * @param id
 	 * @param name
 	 */
-	public FoodItem(String id, String name, String servingsize){
+	public FoodItem(String id, String name, String servingsize) {
 		_ID = id;
 		_Name = name;
+                _ServingSize = servingsize;
 	}
 	
 	private String _ID;

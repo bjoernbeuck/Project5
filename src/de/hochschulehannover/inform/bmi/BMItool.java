@@ -1,11 +1,9 @@
-package de.hochschulehannover.inform.bmi;
-
-
+package main;
 
 import org.apache.log4j.BasicConfigurator;
 
-import de.hochschulehannover.inform.bmi.gui.GUIcontrol;
-import de.hochschulehannover.inform.bmi.gui.MainView;
+import gui.GUIcontrol;
+import gui.MainView;
 
 public class BMItool {
 

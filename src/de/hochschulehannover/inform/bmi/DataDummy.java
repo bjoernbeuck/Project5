@@ -1,34 +1,43 @@
-package de.hochschulehannover.inform.bmi;
+package main;
 
+import comm.BMIComm;
+import comm.BMIParser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import de.hochschulehannover.inform.bmi.data.ActivityHistoryItem;
-import de.hochschulehannover.inform.bmi.data.ActivityItem;
-import de.hochschulehannover.inform.bmi.data.FoodHistoryItem;
-import de.hochschulehannover.inform.bmi.data.FoodItem;
-import de.hochschulehannover.inform.bmi.data.WeightHistoryItem;
+import data.ActivityHistoryItem;
+import data.Fitness;
+import data.FitnessList;
+import data.FoodHistoryItem;
+import data.Nutrition;
+import data.NutritionList;
+import data.WeightHistoryItem;
 
 public class DataDummy {
 
-
-	
 	private ArrayList<FoodHistoryItem> _foodHistory;
 	
 	private ArrayList<ActivityHistoryItem> _activityHistory;
 	
 	private SortedSet<WeightHistoryItem> _weightHistory;
 	
-	private ArrayList<ActivityItem> _activities;
+        BMIComm communicator = new BMIComm();
+        BMIParser parser = new BMIParser();
+
 	
-	
-	public ArrayList<FoodItem> getFoodList(){
-		ArrayList<FoodItem> arl = new ArrayList<FoodItem>();
-		arl.add(new FoodItem("01", "Sample Food 1", "Servings"));
-		arl.add(new FoodItem("02", "Sample Food 2", "Servings"));
-		return arl;
+	public ArrayList<Nutrition> getFoodList() {
+            String nutrition = communicator.getNutrition();
+            NutritionList foodList = parser.getNutrition(nutrition);
+            Nutrition[] foodItems = foodList.getItems();
+            ArrayList<Nutrition> arl = new ArrayList<Nutrition>();
+            for (int i=0; i<foodList.getSize(); i++) {
+                arl.add( new Nutrition(foodItems[i].getId(), foodItems[i].getName(), foodItems[i].getUs_serving()) );
+            }
+//            arl.add(new Nutrition("01", "Sample Food 1", "Servings"));
+//            arl.add(new Nutrition("02", "Sample Food 2", "Servings"));
+            return arl;
 	}
 	
 	public void addToFakedFoodHistoryTable(FoodHistoryItem foodHistoryItem){
@@ -61,13 +70,15 @@ public class DataDummy {
 		_weightHistory.add(weightHistoryItem);
 	}
 
-	public ArrayList<ActivityItem> getActivityList() {
-		if (_activities == null) {
-			_activities = new ArrayList<ActivityItem>();
-			_activities.add(new ActivityItem("sample1", "Sample Activity One"));
-			_activities.add(new ActivityItem("sample2", "Sample Activity Two"));
-		}
-		return _activities;
+	public ArrayList<Fitness> getActivityList() {
+            String fitness = communicator.getFitness();
+            FitnessList activityList = parser.getFitness(fitness);
+            Fitness[] activityItems = activityList.getItems();
+            ArrayList<Fitness> arl = new ArrayList<Fitness>();
+            for (int i=0; i<activityList.getSize(); i++) {
+                arl.add( new Fitness("sample" + activityItems[i].getId(), activityItems[i].getName()) );
+            }
+            return arl;
 	}
 
 	public ArrayList<ActivityHistoryItem> fakedActivityHistoryTable() {

@@ -1,4 +1,4 @@
-package de.hochschulehannover.inform.bmi.gui;
+package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

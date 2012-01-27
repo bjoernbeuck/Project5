@@ -1,4 +1,4 @@
-package de.hochschulehannover.inform.bmi.gui;
+package gui;
 
 import javax.swing.JPanel;
 

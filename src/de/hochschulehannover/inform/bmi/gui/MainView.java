@@ -1,4 +1,4 @@
-package de.hochschulehannover.inform.bmi.gui;
+package gui;
 
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -33,7 +33,6 @@ public class MainView extends JFrame{
 	public void run() {
 		
 		int c = 0;
-		
 		
 		this.setSize(new Dimension(
 				Integer.parseInt(_guiControl.getSetting("mainwidth", "700")),
@@ -129,8 +128,8 @@ public class MainView extends JFrame{
 		
 		
 		this.setVisible(true);
-		if (_guiControl.getSettings("user") == null)
-			_guiControl.showDialogue("settings");
+		if (_guiControl.getSettings("user") == null) 
+                    _guiControl.showDialogue("settings");
+                _guiControl.login();
 	}
-
 }

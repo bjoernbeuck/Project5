@@ -1,5 +1,7 @@
-package de.hochschulehannover.inform.bmi.gui;
+package gui;
 
+import comm.BMIComm;
+import comm.BMIParser;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -13,12 +15,15 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 
-import de.hochschulehannover.inform.bmi.DataDummy;
-import de.hochschulehannover.inform.bmi.data.ActivityHistoryItem;
-import de.hochschulehannover.inform.bmi.data.ActivityItem;
-import de.hochschulehannover.inform.bmi.data.FoodHistoryItem;
-import de.hochschulehannover.inform.bmi.data.FoodItem;
-import de.hochschulehannover.inform.bmi.data.WeightHistoryItem;
+import main.DataDummy;
+import data.ActivityHistoryItem;
+import data.ActivityItem;
+import data.Fitness;
+import data.FoodHistoryItem;
+import data.FoodItem;
+import data.Login;
+import data.Nutrition;
+import data.WeightHistoryItem;
 
 /**
  * Controls the different elements of the GUI
@@ -104,7 +109,10 @@ public final class GUIcontrol {
 	 */
 	private DataDummy dataDummy;
 	
-	private SettingsView _settingsView;
+	private BMIComm _communicator = new BMIComm();
+        private BMIParser _parser = new BMIParser();
+        
+        private SettingsView _settingsView;
 	
 	/**
 	 * Instance of GUIcontrol.
@@ -150,7 +158,7 @@ public final class GUIcontrol {
     	//TODO let throw exception and let caller handle problem (easier to debug)
     	try{
     		return _guiMessages.getString(key);
-    	} catch (java.util.MissingResourceException e) {
+    	} catch (Exception e) {
     		_LOGGER.error(e.getMessage());
     		return key;
     	}
@@ -221,7 +229,7 @@ public final class GUIcontrol {
 		return _workingDate;
 	}
 	
-	public ArrayList<FoodItem> getAllFoodItems(){
+	public ArrayList<Nutrition> getAllFoodItems(){
 		return dataDummy.getFoodList();
 	}
 	
@@ -300,8 +308,17 @@ public final class GUIcontrol {
 	 * @param meal
 	 * @param date
 	 */
-	public void addMeal(String servings, FoodItem food, String meal, Date date){
-		this.dataDummy.addToFakedFoodHistoryTable(new FoodHistoryItem(food, servings, meal, date));
+	public void addMeal(String servings, Nutrition food, String meal, Date date){
+            FoodItem foodItem = new FoodItem(food.getId(), food.getName(), food.getUs_serving());
+            FoodHistoryItem dietItem = new FoodHistoryItem(foodItem, servings, meal, date);
+            this.dataDummy.addToFakedFoodHistoryTable(dietItem);
+//            int userid = Integer.parseInt(this.getSettings("userid"));
+//            String auth = this.getSettings("authkey");
+//            int mealId = Integer.parseInt(food.getId());
+//            Double noOfServings = Double.parseDouble(dietItem.getServingSize());
+//            String mealJSON = _parser.updateDiet(food);
+//            String debug = _communicator.updateDiet(userid, auth, _workingDate.getTime(), mealId, noOfServings, mealJSON);
+//            System.out.println(debug);
 	}
 	
 	public FitnessAddPanel getAddActivityPanel(){
@@ -319,29 +336,31 @@ public final class GUIcontrol {
 	}
 
 	public void addWeight(double newWeight) {
-		this.dataDummy.addToFakedWeightHistory(new WeightHistoryItem(newWeight, this.getWorkingDate()));
+            int userid = Integer.parseInt(this.getSettings("userid"));
+            String authkey = this.getSettings("authkey");
+            System.out.println( _communicator.updateWeight(userid, authkey, _workingDate.getTime(), newWeight) );
+            this.dataDummy.addToFakedWeightHistory(new WeightHistoryItem(newWeight, this.getWorkingDate()));
 	}
 
-	public ArrayList<ActivityItem> getActivities() {
+	public ArrayList<Fitness> getActivities() {
 		return dataDummy.getActivityList();
 	}
 
-	public void addActivity(ActivityItem activityItem, int reps, int timeframe,
-			int value) {
-		dataDummy.addToFakedActivityHistoryTabe(new ActivityHistoryItem(activityItem, reps, timeframe, value, getWorkingDate()));
-		
+	public void addActivity(Fitness fitnessItem, int reps, int timeframe, int value) {
+            ActivityItem activity = new ActivityItem(fitnessItem.getId(), fitnessItem.getName());
+            dataDummy.addToFakedActivityHistoryTabe(new ActivityHistoryItem(activity, reps, timeframe, value, getWorkingDate()));
 	}
 
 	public void showDialogue(String actionCommand) {
-		if ("settings".equals(actionCommand)) getSettingsView().run();
-		else {
-			_LOGGER.error("There is no dialogue called '" + actionCommand + "'.");
-			this.showError(this.getLocalizedString("Error.there_is_no_DIALOGUE_dialouge", new String[] {actionCommand}));
-		}
+            if ("settings".equals(actionCommand)) getSettingsView().run();
+            else {
+                _LOGGER.error("There is no dialogue called '" + actionCommand + "'.");
+                this.showError(this.getLocalizedString("Error.there_is_no_DIALOGUE_dialouge", new String[] {actionCommand}));
+            }
 	}
 
 	private void setSettingsView(SettingsView _settingsView) {
-		this._settingsView = _settingsView;
+            this._settingsView = _settingsView;
 	}
 
 	private SettingsView getSettingsView() {
@@ -463,6 +482,18 @@ public final class GUIcontrol {
 	public void setPassword(String string, char[] password) {
 		// TODO add some sort of deception
 		this.setSetting("password", String.valueOf(password));
+	}
+
+        /**
+	 * Login and set user data
+	 */
+	public void login() {
+            String user = this.getSettings("user");
+            String pass = this.getSettings("password");
+            String userdata = _communicator.login(user, pass);
+            Login login = _parser.login(userdata);
+            this.setSetting( "userid", login.getUserid() );
+            this.setSetting( "authkey", login.getAuth() );
 	}
 
 }

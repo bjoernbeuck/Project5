@@ -1,4 +1,4 @@
-package de.hochschulehannover.inform.bmi.data;
+package data;
 
 import java.util.Date;
 
